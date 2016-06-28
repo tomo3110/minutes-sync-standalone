@@ -1,0 +1,10 @@
+
+node_modules/
+bower_components/
+.DS_Store
+*.log
+config.js
+.env
+scratch/
+public/js/data.js
+sample.data.minutes.json

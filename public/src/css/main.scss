@@ -1,0 +1,206 @@
+// $icon-font-path: "bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+$icon-font-path: '../fonts/';
+
+@import "node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+  // padding-bottom: 20px;
+  background-color: rgba(#ffffff, 0.3);
+}
+
+/* Custom page header */
+.myheader {
+    background-color: #ffffff;
+}
+
+.myfooter {
+    padding: 1rem;
+    p {
+        padding: 1rem;
+    }
+}
+
+.myeditor {
+  outline: 0;
+  border: none;
+}
+
+.mynav-pills {
+  padding-top: 20px;
+}
+
+.mycontent {
+  // padding-top: 8rem;
+}
+
+.mybrand {
+  padding-left: 3rem;
+}
+.mynav-btn {
+  margin-right: 1rem;
+}
+
+/* Custom page footer */
+.footer {
+  margin: 1rem;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  background-color: #000000;
+  // text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+  color: #ffffff;
+  p {
+    padding-left: 1rem;
+    color: #a2a2a2;
+    font-size: 17px;
+  }
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+  p + h4 {
+    margin-top: 28px;
+  }
+}
+
+.agenda--item--input {
+    // @extend .form-control;
+    width: auto;
+    border:none;
+}
+.agenda--item--button {
+    text-decoration: none;
+    cursor: pointer;
+    color: '#b3b3b3';
+}
+.indent--item--text__add {
+    color: '#b3b3b3';
+    font-style: italic;
+    font-size: 12px;
+}
+
+.indent--item--text {
+    font-size: 15px;
+    color: '#7e7e7e';
+}
+.indent--item--blank {
+    text-align: right;
+}
+
+.mymodal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3000;
+    outline: 0;
+    .backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(#000000, 0.7);
+    }
+    .mymodal__dialog {
+        @extend .modal-dialog;
+    }
+}
+
+.flux {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+.projectDitaileHeader {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.projects__main {
+    flex: 1;
+    div.panel-body {
+        padding: 3rem;
+        p {
+            margin-top: 1rem;
+            color: #acacac;
+        }
+    }
+}
+
+.container-card {
+    @extend .container;
+    padding: 0;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 3px 5px #ccc;
+    .content {
+        padding: 1rem;
+    }
+}
+
+.indent--item--content {
+    padding-left: 0;
+}
+
+.indent__view--list {
+    color: #606060;
+}
+
+.projects__panel__item {
+
+}
+
+.my-ok-icon {
+    color: '#2bc60b';
+}
+.my-info-icon {
+    color: '#0b0dd9';
+}
+.my-imp-icon {
+    color: '#e2142d';
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
