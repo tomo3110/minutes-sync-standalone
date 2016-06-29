@@ -68569,8 +68569,7 @@ var MinutesShareText = {
 var MinutesShare = {
     controller: function controller(share) {
         var ctrl = this;
-        // this.baseUrl = `http://localhost:5000/?/minutes/${share.minutes_id}`;
-        this.baseUrl = 'https://minutes-lives-20160605.herokuapp.com/?/minutes/' + share.minutes_id;
+        this.baseUrl = location.protocol + '//' + location.host + '/?/minutes/' + share.minutes_id;
         this.config = function (element, init) {
             if (init) {
                 (0, _jquery2.default)(element).html('');

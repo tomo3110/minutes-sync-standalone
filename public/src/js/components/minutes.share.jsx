@@ -139,8 +139,7 @@ const MinutesShareText = {
 const MinutesShare = {
     controller: function(share) {
         const ctrl = this;
-        // this.baseUrl = `http://localhost:5000/?/minutes/${share.minutes_id}`;
-        this.baseUrl = `https://minutes-lives-20160605.herokuapp.com/?/minutes/${share.minutes_id}`;
+        this.baseUrl = `${location.protocol}//${location.host}/?/minutes/${share.minutes_id}`;
         this.config = function(element, init) {
             if(init) {
                 $(element).html('');
