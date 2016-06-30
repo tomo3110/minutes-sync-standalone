@@ -66,7 +66,7 @@ const minutes = {
             window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
         }
     },
-    fetch() {
+    fetchAll() {
         if(window.localStorage) {
             return JSON.parse(window.localStorage.getItem('minutes_sync'));
         }
@@ -78,11 +78,14 @@ const minutes = {
             minutes: JSON.stringify(minutes.data)
         });
     },
+    jsonParse(jsonData) {
+        return JSON.parse(JSON.stringify(jsonData));
+    },
     init() {
         //初期化処理
 
         //props
-        minutes.cache = minutes.fetch() || {};
+        minutes.cache = minutes.fetchAll() || {};
         minutes.data = m.prop();
         minutes.newAgendaTitle = m.prop('');
         minutes.newIndentContent = m.prop('');

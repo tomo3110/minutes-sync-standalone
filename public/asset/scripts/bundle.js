@@ -34034,6 +34034,7 @@ var Minutes = function () {
                     vm.save(_mithril2.default.route.param('minutesId'));
                 },
                 onunload: function onunload() {
+                    // vm.save(m.route.param('minutesId'));
                     console.log('disconnect');
                 }
             };
@@ -34172,7 +34173,7 @@ var minutes = {
             window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
         }
     },
-    fetch: function fetch() {
+    fetchAll: function fetchAll() {
         if (window.localStorage) {
             return JSON.parse(window.localStorage.getItem('minutes_sync'));
         }
@@ -34184,11 +34185,14 @@ var minutes = {
             minutes: JSON.stringify(minutes.data)
         });
     },
+    jsonParse: function jsonParse(jsonData) {
+        return JSON.parse(JSON.stringify(jsonData));
+    },
     init: function init() {
         //初期化処理
 
         //props
-        minutes.cache = minutes.fetch() || {};
+        minutes.cache = minutes.fetchAll() || {};
         minutes.data = _mithril2.default.prop();
         minutes.newAgendaTitle = _mithril2.default.prop('');
         minutes.newIndentContent = _mithril2.default.prop('');
@@ -34243,7 +34247,7 @@ var MinutesList = function () {
         _classCallCheck(this, MinutesList);
 
         this.controller = function () {
-            this.list = Object.values(vm.minutes.cache).map(function (item) {
+            this.list = Object.values(vm.minutes.jsonParse(vm.minutes.cache)).map(function (item) {
                 return new _minutes2.default(item);
             }) || [];
             this.newTitle = vm.minutes.newTitle;
@@ -34343,7 +34347,6 @@ var Top = function () {
                 console.log(minutesId);
                 vm.minutes.newMinutes({
                     title: ctrl.newMinutesTitle(),
-                    day: new Date(),
                     minutes_id: minutesId
                 });
                 if (window.localStorage) {

@@ -7,7 +7,7 @@ import TabView from '../../components/tab.jsx';
 export default class MinutesList {
     constructor(vm) {
             this.controller = function() {
-                this.list = Object.values(vm.minutes.cache).map(item => new Minutes(item)) || [];
+                this.list = Object.values(vm.minutes.jsonParse(vm.minutes.cache)).map(item => new Minutes(item)) || [];
                 this.newTitle = vm.minutes.newTitle;
                 this.newWhere = vm.minutes.newWhere;
                 this.newDay = vm.minutes.newDay;

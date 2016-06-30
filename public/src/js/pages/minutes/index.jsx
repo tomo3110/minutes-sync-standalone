@@ -46,6 +46,7 @@ export default class Minutes {
                     vm.save(m.route.param('minutesId'));
                 },
                 onunload() {
+                    // vm.save(m.route.param('minutesId'));
                     console.log('disconnect');
                 }
             };

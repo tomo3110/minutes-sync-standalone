@@ -13,7 +13,6 @@ export default class Top {
                 console.log(minutesId);
                 vm.minutes.newMinutes({
                     title: ctrl.newMinutesTitle(),
-                    day: new Date(),
                     minutes_id: minutesId
                 });
                 if(window.localStorage) {
