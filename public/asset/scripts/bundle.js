@@ -25555,11 +25555,9 @@ var MinutesAddInput = {
             var minutesId = _uuid2.default.v4();
             _vm2.default.minutes.newMinutes({
                 title: ctrl.newMinutesTitle(),
-                minutes_id: minutesId
+                minutes_id: minutesId,
+                isSave: true
             });
-            if (window.localStorage) {
-                window.localStorage.setItem('minutes_sync', JSON.stringify(_vm2.default.minutes.cache));
-            }
             ctrl.newMinutesTitle('');
             _mithril2.default.route('/minutes/' + minutesId);
         };
@@ -26209,6 +26207,11 @@ var MinutesSettingTime = {
 };
 
 var MinutesSettingToggle = {
+    controller: function controller(item) {
+        this.onclicked = function () {
+            item.value(!item.value());
+        };
+    },
     view: function view(ctrl, item) {
         return {
             tag: 'section',
@@ -26216,8 +26219,17 @@ var MinutesSettingToggle = {
                 tag: 'label',
                 children: [{
                     tag: 'input',
-                    attrs: { type: 'checkbox', name: item.name }
-                }, item.label]
+                    attrs: { type: 'checkbox',
+                        name: item.name,
+                        checked: item.value(),
+                        onclick: ctrl.onclicked }
+                }, function () {
+                    if (item.value()) {
+                        return item.trueText;
+                    } else {
+                        return item.falseText;
+                    }
+                }()]
             }],
             attrs: { className: 'checkbox' }
         };
@@ -26234,7 +26246,47 @@ var MinutesSettingToggleLabel = {
                 attrs: { htmlFor: item.name, className: 'col-sm-2 control-label' }
             }, {
                 tag: 'div',
-                children: [_mithril2.default.component(MinutesSettingToggle, { label: item.text, name: item.name }, [])],
+                children: [_mithril2.default.component(MinutesSettingToggle, {
+                    value: item.value,
+                    trueText: item.trueText,
+                    falseText: item.falseText,
+                    name: item.name }, [])],
+                attrs: { className: 'col-sm-10' }
+            }],
+            attrs: { className: 'form-group' }
+        };
+    }
+};
+
+var MinutesSettingIsSavedButton = {
+    view: function view(ctrl, item) {
+        function _clicked() {
+            item.isSave(false);
+            item.destroy();
+        };
+        return {
+            tag: 'section',
+            children: [{
+                tag: 'label',
+                children: [item.label],
+                attrs: { htmlFor: item.name, className: 'col-sm-2 control-label' }
+            }, {
+                tag: 'div',
+                children: [{
+                    tag: 'button',
+                    children: [function () {
+                        if (item.isSave()) {
+                            return item.trueText;
+                        } else {
+                            return item.falseText;
+                        }
+                    }()],
+                    attrs: { type: 'button',
+                        name: item.name,
+                        className: 'btn btn-default btn-block',
+                        onclick: _clicked,
+                        disabled: !item.isSave() }
+                }],
                 attrs: { className: 'col-sm-10' }
             }],
             attrs: { className: 'form-group' }
@@ -26244,6 +26296,10 @@ var MinutesSettingToggleLabel = {
 
 var MinutesSetting = {
     view: function view(ctrl, setting) {
+        function _destroy() {
+            setting.destroy();
+            _mithril2.default.route('/minutes');
+        };
         return {
             tag: 'div',
             children: [{
@@ -26272,7 +26328,12 @@ var MinutesSetting = {
                     name: 'minutes-startTime-input' }, []), _mithril2.default.component(MinutesSettingTime, {
                     value: setting.data().endTime,
                     label: '終了時間',
-                    name: 'minutes-endTime-input' }, []), {
+                    name: 'minutes-endTime-input' }, []), _mithril2.default.component(MinutesSettingIsSavedButton, {
+                    isSave: setting.data().isSave,
+                    destroy: setting.destroy,
+                    label: '議事録の保存',
+                    trueText: '許可する',
+                    falseText: '許可しない' }, []), {
                     tag: 'hr'
                 }, {
                     tag: 'h3',
@@ -26283,16 +26344,20 @@ var MinutesSetting = {
                     attrs: { className: 'btn btn-default btn-block', onclick: setting.update }
                 }, {
                     tag: 'hr'
-                }, {
-                    tag: 'h3',
-                    children: ['議事録の保存']
-                }, {
-                    tag: 'button',
-                    children: ['議事録を保存する'],
-                    attrs: { className: 'btn btn-success btn-block', onclick: setting.save }
-                }, {
-                    tag: 'hr'
-                }, {
+                }, function () {
+                    if (setting.data().isSave()) {
+                        return [{
+                            tag: 'h3',
+                            children: ['議事録の保存']
+                        }, {
+                            tag: 'button',
+                            children: ['議事録を保存する'],
+                            attrs: { className: 'btn btn-success btn-block', onclick: setting.save }
+                        }, {
+                            tag: 'hr'
+                        }];
+                    }
+                }(), {
                     tag: 'h3',
                     children: ['議事録の削除']
                 }, {
@@ -26301,7 +26366,7 @@ var MinutesSetting = {
                 }, {
                     tag: 'button',
                     children: ['議事録を削除する'],
-                    attrs: { className: 'btn btn-danger btn-block', onclick: setting.destroy }
+                    attrs: { className: 'btn btn-danger btn-block', onclick: _destroy }
                 }, {
                     tag: 'hr'
                 }],
@@ -26951,6 +27016,7 @@ var Minutes = function () {
         this.day = _mithril2.default.prop(args.day || '');
         this.startTime = _mithril2.default.prop(args.startTime || '');
         this.endTime = _mithril2.default.prop(args.endTime || '');
+        this.isSave = _mithril2.default.prop(args.isSave);
 
         //init
         this.addAgendaListAll(args.agendaList);
@@ -26978,7 +27044,6 @@ var Minutes = function () {
         value: function addEntryList(item) {
             var value = _mithril2.default.prop(item);
             this.entryList.push(value);
-            // console.dir(this.entryList);
         }
     }, {
         key: 'addEntryListAll',
@@ -27084,15 +27149,15 @@ var Minutes = function () {
                     this.isEditTitle(!this.isEditTitle());
                 },
                 save: function save() {
+                    if (!vm.data().isSave()) return false;
                     vm.save(minutesId);
                 },
                 destroy: function destroy() {
+                    vm.data().isSave(false);
                     vm.destroy(minutesId);
-                    vm.dataSync(minutesId);
-                    _mithril2.default.route('/minutes');
                 },
                 onunload: function onunload() {
-                    console.log('disconnect');
+                    this.save();
                 }
             };
         };
@@ -27180,7 +27245,7 @@ var minutes = {
         minutes.data(new _minutes2.default(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
         _mithril2.default.endComputation();
 
@@ -27236,7 +27301,6 @@ var minutes = {
     destroy: function destroy(minutesId) {
         if (window.localStorage) {
             delete minutes.cache[minutesId];
-            minutes.data('');
             window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
         }
     },
@@ -27249,7 +27313,7 @@ var minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
     },
     jsonParse: function jsonParse(jsonData) {
@@ -27408,7 +27472,7 @@ var Top = function () {
                             children: ['会議自体が仕事になっていませんか？']
                         }, {
                             tag: 'p',
-                            children: ['あるべき姿の会議を取り戻しましょう。']
+                            children: ['会議のあるべき姿を取り戻しましょう。']
                         }] }, [])],
                     attrs: { className: 'row' }
                 }],

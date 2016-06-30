@@ -13,6 +13,7 @@ export default class Minutes {
         this.day = m.prop(args.day || '');
         this.startTime = m.prop(args.startTime || '');
         this.endTime = m.prop(args.endTime || '');
+        this.isSave = m.prop(args.isSave);
 
         //init
         this.addAgendaListAll(args.agendaList);
@@ -27,7 +28,6 @@ export default class Minutes {
     addEntryList(item) {
         const value = m.prop(item);
         this.entryList.push(value);
-        // console.dir(this.entryList);
     }
     addEntryListAll(list = []) {
         list.map(item => this.addEntryList(item));

@@ -6,7 +6,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/transition';
 import m from 'mithril';
 
 import Header from './components/header.jsx';
-import footer from './components/footer.jsx';
+import Footer from './components/footer.jsx';
 
 import Top from './pages/top/index.jsx';
 import Minutes from './pages/minutes/index.jsx';
@@ -52,8 +52,7 @@ m.mount(document.getElementById('header'), {
 
 //フッター
 m.mount(document.getElementById('footer'), {
-    controller() {},
-    view() {
-        return footer();
+    view(ctrl) {
+        return <Footer />;
     }
 });

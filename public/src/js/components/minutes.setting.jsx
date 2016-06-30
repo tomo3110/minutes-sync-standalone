@@ -99,11 +99,25 @@ const MinutesSettingTime = {
 };
 
 const MinutesSettingToggle = {
+    controller: function(item) {
+        this.onclicked = function() {
+            item.value(!item.value());
+        };
+    },
     view(ctrl, item) {
         return <section className='checkbox'>
             <label>
-                <input type='checkbox' name={item.name}/>
-                {item.label}
+                <input type='checkbox'
+                    name={item.name}
+                    checked={item.value()}
+                    onclick={ctrl.onclicked}/>
+                {(() => {
+                    if(item.value()) {
+                        return item.trueText;
+                    } else {
+                        return item.falseText;
+                    }
+                })()}
             </label>
         </section>;
     }
@@ -114,7 +128,38 @@ const MinutesSettingToggleLabel = {
         return <section className='form-group'>
             <label htmlFor={item.name} className='col-sm-2 control-label'>{item.label}</label>
             <div className='col-sm-10'>
-                <MinutesSettingToggle label={item.text} name={item.name}/>
+                <MinutesSettingToggle
+                    value={item.value}
+                    trueText={item.trueText}
+                    falseText={item.falseText}
+                    name={item.name}/>
+            </div>
+        </section>
+    }
+};
+
+const MinutesSettingIsSavedButton = {
+    view(ctrl, item) {
+        function _clicked() {
+            item.isSave(false);
+            item.destroy();
+        };
+        return <section className='form-group'>
+            <label htmlFor={item.name} className='col-sm-2 control-label'>{item.label}</label>
+            <div className='col-sm-10'>
+                <button type='button'
+                    name={item.name}
+                    className='btn btn-default btn-block'
+                    onclick={_clicked}
+                    disabled={!item.isSave()}>
+                    {(() => {
+                        if(item.isSave()) {
+                            return item.trueText;
+                        } else {
+                            return item.falseText;
+                        }
+                    })()}
+                </button>
             </div>
         </section>
     }
@@ -122,6 +167,10 @@ const MinutesSettingToggleLabel = {
 
 const MinutesSetting = {
     view(ctrl, setting) {
+        function _destroy() {
+            setting.destroy();
+            m.route('/minutes');
+        };
         return <div className='content'>
             <section className='form-horizontal'>
                 <h3>基本情報</h3>
@@ -152,21 +201,30 @@ const MinutesSetting = {
                     value={setting.data().endTime}
                     label='終了時間'
                     name='minutes-endTime-input' />
-                {/*<hr/>
-                <h3>各種設定</h3>
-                <MinutesSettingToggleLabel label='議事録の公開' text='公開する'/>
-                <MinutesSettingToggleLabel label='参加者の出席' text='出席を取る'/>
-                <MinutesSettingToggleLabel label='合言葉を使用' text='使用する'/>*/}
+                <MinutesSettingIsSavedButton
+                    isSave={setting.data().isSave}
+                    destroy={setting.destroy}
+                    label='議事録の保存'
+                    trueText='許可する'
+                    falseText='許可しない'/>
                 <hr/>
                 <h3>議事録の更新</h3>
                 <button className='btn btn-default btn-block' onclick={setting.update}>議事録を更新する</button>
                 <hr/>
-                <h3>議事録の保存</h3>
-                <button className='btn btn-success btn-block' onclick={setting.save}>議事録を保存する</button>
-                <hr/>
+                {(() => {
+                    if(setting.data().isSave()) {
+                        return [
+                            <h3>議事録の保存</h3>,
+                            <button className='btn btn-success btn-block' onclick={setting.save}>
+                                議事録を保存する
+                            </button>,
+                            <hr/>
+                        ];
+                    }
+                })()}
                 <h3>議事録の削除</h3>
                 <p>議事録を削除した場合、修復することはできません。</p>
-                <button className='btn btn-danger btn-block' onclick={setting.destroy}>議事録を削除する</button>
+                <button className='btn btn-danger btn-block' onclick={_destroy}>議事録を削除する</button>
                 <hr/>
             </section>
         </div>;

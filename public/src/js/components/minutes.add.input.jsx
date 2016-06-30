@@ -11,11 +11,9 @@ const MinutesAddInput = {
             const minutesId = uuid.v4();
             vm.minutes.newMinutes({
                 title: ctrl.newMinutesTitle(),
-                minutes_id: minutesId
+                minutes_id: minutesId,
+                isSave: true
             });
-            if(window.localStorage) {
-                window.localStorage.setItem('minutes_sync', JSON.stringify(vm.minutes.cache));
-            }
             ctrl.newMinutesTitle('');
             m.route(`/minutes/${minutesId}`);
         };

@@ -45,15 +45,15 @@ export default class Minutes {
                     this.isEditTitle(!this.isEditTitle());
                 },
                 save() {
+                    if(!vm.data().isSave()) return false;
                     vm.save(minutesId);
                 },
                 destroy() {
+                    vm.data().isSave(false);
                     vm.destroy(minutesId);
-                    vm.dataSync(minutesId);
-                    m.route('/minutes');
                 },
                 onunload() {
-                    console.log('disconnect');
+                    this.save();
                 }
             };
         }

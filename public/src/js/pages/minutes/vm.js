@@ -13,7 +13,7 @@ const minutes = {
         minutes.data(new Minutes(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
         m.endComputation();
 
@@ -68,7 +68,6 @@ const minutes = {
     destroy(minutesId) {
         if(window.localStorage) {
             delete minutes.cache[minutesId];
-            minutes.data('');
             window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
         }
     },
@@ -81,7 +80,7 @@ const minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
     },
     jsonParse(jsonData) {
