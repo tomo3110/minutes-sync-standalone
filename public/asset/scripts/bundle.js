@@ -24956,20 +24956,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * フッター
 * @return {Mithrui.Virtul.DOM}
 */
-var footer = function footer() {
-    return {
-        tag: 'footer',
-        children: [{
-            tag: 'hr'
-        }, {
-            tag: 'p',
-            children: ['♥ from the Yeoman team']
-        }],
-        attrs: { className: 'myfooter' }
-    };
+var Footer = {
+    view: function view(ctrl, _view) {
+        return {
+            tag: 'footer',
+            children: [{
+                tag: 'hr'
+            }, {
+                tag: 'p',
+                children: ['♥ from the Yeoman team']
+            }],
+            attrs: { className: 'myfooter' }
+        };
+    }
 };
 
-exports.default = footer;
+exports.default = Footer;
 module.exports = exports['default'];
 
 },{"mithril":43}],68:[function(require,module,exports){
@@ -26795,9 +26797,8 @@ _mithril2.default.mount(document.getElementById('header'), {
 
 //フッター
 _mithril2.default.mount(document.getElementById('footer'), {
-    controller: function controller() {},
-    view: function view() {
-        return (0, _footer2.default)();
+    view: function view(ctrl) {
+        return _mithril2.default.component(_footer2.default, {}, []);
     }
 });
 

@@ -9,7 +9,7 @@ const Footer = {
             <hr/>
             <p>♥ from the Yeoman team</p>
         </footer>;
-    };
+    }
 };
 
 export default Footer;
