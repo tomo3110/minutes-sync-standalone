@@ -1,7 +1,6 @@
 import m from 'mithril';
 import $ from 'jquery';
 import Clipboard from 'clipboard';
-import pdfMake from 'pdfmake';
 import 'jquery-qrcode';
 
 const border = '------------------------------------------------------------------------------------------------------';

@@ -9,7 +9,6 @@ const AgendaItem = {
             <div className='col-xs-12'>
                 <h3>
                     {`${item.key + 1}. ${item.title()}`}
-                    {/*<input type='text' className='agenda--item--input' value={item.title()} oninput={m.withAttr('value', item.title)}/>*/}
                 </h3>
                 <IndentList
                     id={`indent-modal-${item.key}`}

@@ -6,7 +6,7 @@ const MinutesInfo = {
         return <section>
             <div className='row'>
                 <div className='col-xs-6'>
-                    <p><b>日　付:　</b>{moment(info.day()).format('YYYY/MM/DD') || 'いつ？'}</p>
+                    <p><b>日　付:　</b>{info.day() || 'いつ？'}</p>
                     <p><b>場　所:　</b>{info.where() || 'どこで'}</p>
                 </div>
                 <div className='col-xs-6'>

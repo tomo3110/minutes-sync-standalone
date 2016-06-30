@@ -1,6 +1,7 @@
 
 import 'babel-polyfill';
-import bootstrap from 'bootstrap-sass';
+import 'bootstrap-sass/assets/javascripts/bootstrap/collapse';
+import 'bootstrap-sass/assets/javascripts/bootstrap/transition';
 
 import m from 'mithril';
 

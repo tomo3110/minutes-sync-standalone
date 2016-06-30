@@ -1,7 +1,4 @@
 import m from 'mithril';
-// import $ from 'jquery';
-// import 'bootstrap-datepicker';
-// import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.ja.min.js';
 
 const MinutesSettingInput = {
     view(ctrl, item) {
