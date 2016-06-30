@@ -1,5 +1,5 @@
 
-import 'babel-polyfill';
+// import 'babel-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap/collapse';
 import 'bootstrap-sass/assets/javascripts/bootstrap/transition';
 
@@ -18,8 +18,8 @@ import vm from './vm';
 
 vm.minutes.init();
 
-m.route(document.getElementById('main'), '/', {
-    '/': new Top(vm),
+m.route(document.getElementById('main'), '/home', {
+    '/home': new Top(),
     '/about': new Top(vm),
     '/minutes': new MinutesList(vm),
     '/minutes/:minutesId': new Minutes(vm.minutes),

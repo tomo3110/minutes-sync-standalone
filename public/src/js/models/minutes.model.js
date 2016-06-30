@@ -1,6 +1,5 @@
 import m from 'mithril';
 import Agenda from './agenda.model';
-// import moment from 'moment';
 
 export default class Minutes {
     constructor(args) {
@@ -11,10 +10,9 @@ export default class Minutes {
         this.agendaList = new Array();
         this.secretary = m.prop(args.secretary || '');
         this.where = m.prop(args.where || '');
-        this.day = m.prop(args.day);
+        this.day = m.prop(args.day || '');
         this.startTime = m.prop(args.startTime || '');
         this.endTime = m.prop(args.endTime || '');
-        this.updateDate = m.prop(args.updateDate);
 
         //init
         this.addAgendaListAll(args.agendaList);

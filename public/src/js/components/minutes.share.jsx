@@ -53,7 +53,12 @@ function agendaParse(list = []) {
     return resolte;
 };
 
-function minutesParse(data) {
+function jsonParse(data) {
+    return JSON.parse(JSON.stringify(data));
+};
+
+export function minutesParse(args) {
+    const data = jsonParse(args);
     return data.title + nl
     + border + nl
     + '場所　:　' + data.where + nl
@@ -65,16 +70,6 @@ function minutesParse(data) {
     + agendaParse(data.agendaList)
     + border;
 };
-
-function jsonParse(data) {
-    return JSON.parse(JSON.stringify(data));
-};
-
-
-export function textExport(data) {
-    return jsonParse(data);
-};
-
 
 const MinutesShareCopy = {
     controller: function(item) {
@@ -108,7 +103,7 @@ const MinutesShareCopy = {
 
 
 const MinutesShareText = {
-    controller: function(text) {
+    controller(text) {
         const ctrl = this;
         this.copy = function(element, init, context) {
             if(init) return false;
@@ -119,7 +114,7 @@ const MinutesShareText = {
         return <section>
             <section className='form-group'>
                 <textarea className='form-control' id='minutes-test-copy' rows='25'>
-                    {minutesParse(jsonParse(text.data()))}
+                    {minutesParse(text.data())}
                 </textarea>
             </section>
             <button
@@ -138,7 +133,7 @@ const MinutesShareText = {
 const MinutesShare = {
     controller: function(share) {
         const ctrl = this;
-        this.baseUrl = `${location.protocol}//${location.host}/?/minutes/${share.minutes_id}`;
+        this.baseUrl = `${location.protocol}//${location.host}/?${m.route()}`;
         this.config = function(element, init) {
             if(init) {
                 $(element).html('');
@@ -160,17 +155,6 @@ const MinutesShare = {
                 <div className='col-sm-6'>
                     <h5>URLのコピー</h5>
                     <MinutesShareCopy url={ctrl.baseUrl}/>
-                    <hr/>
-                    <h5>印刷</h5>
-                    <ul>
-                        <li>QRコードを印刷する場合は下の印刷ボタンを押してください。</li>
-                        <li>
-                            <b>「合言葉」</b>と<b>「出席」</b>を参加者から取る場合は、
-                            <b>[設定・その他] > [各種設定]</b>
-                            からそれぞれ設定してください。
-                        </li>
-                    </ul>
-                    <button className='btn btn-default btn-block'>印刷</button>
                 </div>
             </section>
             <hr/>

@@ -4,19 +4,19 @@ import m from 'mithril';
 const MinutesPanelItem = {
     controller: function (props) {
         this.clicked = function() {
-            m.route(`/minutes/${props.minutes_id()}`);
+            m.route(`/minutes/${props.minutes_id}`);
         };
     },
     view(ctrl, props) {
         return <section className='panel panel-default projects__main' onclick={ctrl.clicked}>
             <div className="panel-body">
-                <div className='panel-title'>{props.title()}</div>
+                <div className='panel-title'>{props.title}</div>
                 <div className='row'>
                     <div className='col-xs-3 col-sm-2 col-md-1' style='text-align: right;'>
                         <p>日付:</p>
                     </div>
                     <div className='col-xs-9 col-sm-10 col-md-11' style='text-align: left;'>
-                        <p>{props.day()}</p>
+                        <p>{props.day || 'いつ'}</p>
                     </div>
                 </div>
                 <div className='row'>
@@ -24,7 +24,7 @@ const MinutesPanelItem = {
                         <p>時間:</p>
                     </div>
                     <div className='col-xs-9 col-sm-10 col-md-11' style='text-align: left;'>
-                        <p>{`${props.startTime()} 〜 ${props.endTime()}`}</p>
+                        <p>{`${props.startTime || '開始時間'} 〜 ${props.endTime || '終了時間'}`}</p>
                     </div>
                 </div>
                 <div className='row'>
@@ -32,7 +32,7 @@ const MinutesPanelItem = {
                         <p>場所:</p>
                     </div>
                     <div className='col-xs-9 col-sm-10 col-md-11' style='text-align: left;'>
-                        <p>{props.where()}</p>
+                        <p>{props.where || 'どこで'}</p>
                     </div>
                 </div>
             </div>

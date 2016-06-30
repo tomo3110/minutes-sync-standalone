@@ -164,10 +164,10 @@ const MinutesSetting = {
                 <h3>議事録の保存</h3>
                 <button className='btn btn-success btn-block' onclick={setting.save}>議事録を保存する</button>
                 <hr/>
-                {/*<h3>議事録の削除</h3>
+                <h3>議事録の削除</h3>
                 <p>議事録を削除した場合、修復することはできません。</p>
-                <button className='btn btn-danger btn-block'>議事録を削除する</button>
-                <hr/>*/}
+                <button className='btn btn-danger btn-block' onclick={setting.destroy}>議事録を削除する</button>
+                <hr/>
             </section>
         </div>;
     }

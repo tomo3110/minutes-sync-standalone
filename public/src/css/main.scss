@@ -60,11 +60,12 @@ body {
 }
 
 /* Main marketing message and sign up button */
-.jumbotron {
+.myjumbotron {
+  @extend .jumbotron;
   background-color: #000000;
-  // text-align: center;
   border-bottom: 1px solid #e5e5e5;
   color: #ffffff;
+  border-radius: 0px;
   p {
     padding-left: 1rem;
     color: #a2a2a2;

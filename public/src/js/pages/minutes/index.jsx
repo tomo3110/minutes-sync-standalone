@@ -9,7 +9,8 @@ import MinutesSetting from '../../components/minutes.setting.jsx';
 export default class Minutes {
     constructor(vm) {
         this.controller = function() {
-            vm.socket(m.route.param('minutesId'));
+            const minutesId = m.route.param('minutesId');
+            vm.socket(minutesId);
             return {
                 data: vm.data,
                 newAgendaTitle: vm.newAgendaTitle,
@@ -19,7 +20,7 @@ export default class Minutes {
                 isEditTitle: m.prop(false),
                 agendaAdd() {
                     vm.addAgendaItem();
-                    vm.dataSync(m.route.param('minutesId'));
+                    vm.dataSync(minutesId);
                 },
                 indentAdd(agendaIndex) {
                     vm.addIndentItem(agendaIndex, {
@@ -27,26 +28,31 @@ export default class Minutes {
                         indent: 1,
                         sign: 0
                     });
-                    vm.dataSync(m.route.param('minutesId'));
+                    vm.dataSync(minutesId);
                 },
                 entryAdd(name = '') {
                     vm.addEntryItem(name);
-                    vm.dataSync(m.route.param('minutesId'));
+                    vm.dataSync(minutesId);
                 },
                 entryRemove(index) {
                     vm.removeEntryItem(index);
+                    vm.dataSync(minutesId);
                 },
                 update() {
-                    vm.dataSync(m.route.param('minutesId'));
+                    vm.dataSync(minutesId);
                 },
                 toggleEditTitle() {
                     this.isEditTitle(!this.isEditTitle());
                 },
                 save() {
-                    vm.save(m.route.param('minutesId'));
+                    vm.save(minutesId);
+                },
+                destroy() {
+                    vm.destroy(minutesId);
+                    vm.dataSync(minutesId);
+                    m.route('/minutes');
                 },
                 onunload() {
-                    // vm.save(m.route.param('minutesId'));
                     console.log('disconnect');
                 }
             };
@@ -83,7 +89,11 @@ export default class Minutes {
                 },{
                     id: 'setting-minutes',
                     title: '設定・その他',
-                    content: <MinutesSetting data={ctrl.data} update={ctrl.update} save={ctrl.save}/>
+                    content: <MinutesSetting
+                        data={ctrl.data}
+                        update={ctrl.update}
+                        save={ctrl.save}
+                        destroy={ctrl.destroy}/>
                 }
             ]}/>
         </div>;

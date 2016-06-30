@@ -60,9 +60,15 @@ const minutes = {
         minutes.data().removeEntryList(index);
     },
     save(minutesId) {
-        console.log(minutesId);
         if(window.localStorage) {
             minutes.cache[minutesId] = minutes.data();
+            window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+        }
+    },
+    destroy(minutesId) {
+        if(window.localStorage) {
+            delete minutes.cache[minutesId];
+            minutes.data('');
             window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
         }
     },
