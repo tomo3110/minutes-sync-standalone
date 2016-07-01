@@ -6,8 +6,8 @@ import m from 'mithril';
 const Header = {
     view(ctrl, args) {
         return <nav className='navbar navbar-default myheader' >
-            <div className='container-fluid'>
-                <div className='navbar-header'>
+            <div className='container-fluid myheader-in'>
+                <div className='navbar-header myheader-main'>
                     <button
                         className='navbar-toggle collapsed'
                         data-toggle='collapse'

@@ -10,15 +10,19 @@ $icon-font-path: '../fonts/';
   padding: 0.2em 0;
 }
 
+.pages-title {
+    color: #4ed49c;
+}
+
 /* Space out content a bit */
 body {
-  // padding-bottom: 20px;
-  background-color: rgba(#ffffff, 0.3);
+  background-color: #ffffff;
 }
 
 /* Custom page header */
 .myheader {
     background-color: #ffffff;
+    // border: solid 1px #ffffff;
 }
 
 .myfooter {
@@ -26,6 +30,11 @@ body {
     p {
         padding: 1rem;
     }
+}
+
+.container-top {
+    @extend .container;
+    // @extend .container-fluid;
 }
 
 .myeditor {
@@ -38,7 +47,7 @@ body {
 }
 
 .mycontent {
-  // padding-top: 8rem;
+    // padding-top: 8rem;
 }
 
 .mybrand {
@@ -61,24 +70,44 @@ body {
 
 /* Main marketing message and sign up button */
 .myjumbotron {
-  @extend .jumbotron;
-  background-color: #000000;
-  border-bottom: 1px solid #e5e5e5;
-  color: #ffffff;
-  border-radius: 0px;
-  p {
-    padding-left: 1rem;
-    color: #a2a2a2;
-    font-size: 17px;
-  }
+    @extend .jumbotron;
+    background-color: rgba(#000000, 0);
+    text-align: center;
+    h2 {
+        color: #4ed49c;
+        margin-bottom: 3rem;
+    }
+    p {
+        color: #000000;
+        font-size: 17px;
+    }
 }
 
 /* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-  p + h4 {
-    margin-top: 28px;
-  }
+.mymarketing {
+    @extend .row;
+    padding: 1rem;
+    .item {
+        @extend .col-sm-4;
+        padding-bottom: 1rem;
+        section {
+            text-align: center;
+        }
+        h3 {
+            color: #4ed49c;
+            text-align: center;
+        }
+        p::before {
+            content: '';
+            display: block;
+            height: 1rem;
+        }
+    }
+}
+
+.characteristic {
+    text-align: center;
+    color: #4ed49c;
 }
 
 .agenda--item--input {
@@ -144,6 +173,14 @@ body {
         p {
             margin-top: 1rem;
             color: #acacac;
+        }
+    }
+    &:hover {
+        background-color: #b1fcdd;
+        div.panel-body {
+            p {
+                color: #000;
+            }
         }
     }
 }

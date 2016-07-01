@@ -25029,7 +25029,7 @@ var Header = {
                         }],
                         attrs: { className: 'navbar-brand mybrand' }
                     }],
-                    attrs: { className: 'navbar-header' }
+                    attrs: { className: 'navbar-header myheader-main' }
                 }, {
                     tag: 'div',
                     children: [{
@@ -25041,7 +25041,7 @@ var Header = {
                     }],
                     attrs: { className: 'collapse navbar-collapse', id: 'bs-example-navbar-collapse-1' }
                 }],
-                attrs: { className: 'container-fluid' }
+                attrs: { className: 'container-fluid myheader-in' }
             }],
             attrs: { className: 'navbar navbar-default myheader' }
         };
@@ -27405,7 +27405,8 @@ var MinutesList = function () {
                 tag: 'div',
                 children: [{
                     tag: 'h2',
-                    children: ['議事録一覧']
+                    children: ['議事録一覧'],
+                    attrs: { className: 'pages-title' }
                 }, {
                     tag: 'hr'
                 }, {
@@ -27453,6 +27454,39 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ItemView = {
+    view: function view(ctrl, item) {
+        return {
+            tag: 'div',
+            children: [{
+                tag: 'h3',
+                children: [item.title]
+            }, {
+                tag: 'section',
+                children: [{
+                    tag: 'img',
+                    attrs: { src: 'https://placehold.it/150x150' }
+                }]
+            }, {
+                tag: 'p',
+                children: [item.text]
+            }],
+            attrs: { className: 'item' }
+        };
+    }
+};
+
+var ListView = {
+    view: function view(ctrl, props) {
+        return {
+            tag: 'section',
+            children: [props.list.map(function (item) {
+                return _mithril2.default.component(ItemView, { title: item.title, text: item.text }, []);
+            })]
+        };
+    }
+};
+
 var Top = function () {
     function Top() {
         _classCallCheck(this, Top);
@@ -27474,10 +27508,27 @@ var Top = function () {
                         }, {
                             tag: 'p',
                             children: ['会議のあるべき姿を取り戻しましょう。']
-                        }] }, [])],
+                        }] }, []), {
+                        tag: 'h3',
+                        children: ['特徴'],
+                        attrs: { className: 'characteristic' }
+                    }, {
+                        tag: 'div',
+                        children: [_mithril2.default.component(ListView, { list: [{
+                                title: '登録不要',
+                                text: '煩わしいユーザー登録、パスワード入力などはありません。今すぐに使い始めることができます。'
+                            }, {
+                                title: '議事録の高速同期',
+                                text: 'どこから会議に参加しても同じ情報を瞬時にチームに共有します。余計な仕事をあなたにさせるつもりはありません。'
+                            }, {
+                                title: 'モバイル対応',
+                                text: 'いつでも、どこでも、会議に参加することができます。'
+                            }] }, [])],
+                        attrs: { className: 'mymarketing' }
+                    }],
                     attrs: { className: 'row' }
                 }],
-                attrs: { className: 'container-fluid' }
+                attrs: { className: 'container-top' }
             };
         }
     }]);

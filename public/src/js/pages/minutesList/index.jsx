@@ -27,7 +27,7 @@ export default class MinutesList {
     }
     view(ctrl) {
         return <div className='container-fluid'>
-            <h2>議事録一覧</h2>
+            <h2 className='pages-title'>議事録一覧</h2>
             <hr/>
             <section className='container-fluid'>
                 <MinutesAddInput />
