@@ -25043,7 +25043,7 @@ var Header = {
                 }],
                 attrs: { className: 'container-fluid myheader-in' }
             }],
-            attrs: { className: 'navbar navbar-default myheader' }
+            attrs: { className: 'navbar navbar-default' }
         };
     }
 };
@@ -27459,14 +27459,14 @@ var ItemView = {
         return {
             tag: 'div',
             children: [{
-                tag: 'h3',
-                children: [item.title]
-            }, {
                 tag: 'section',
                 children: [{
                     tag: 'img',
                     attrs: { src: 'https://placehold.it/150x150' }
                 }]
+            }, {
+                tag: 'h3',
+                children: [item.title]
             }, {
                 tag: 'p',
                 children: [item.text]
@@ -27509,7 +27509,7 @@ var Top = function () {
                             tag: 'p',
                             children: ['会議のあるべき姿を取り戻しましょう。']
                         }] }, []), {
-                        tag: 'h3',
+                        tag: 'h2',
                         children: ['特徴'],
                         attrs: { className: 'characteristic' }
                     }, {

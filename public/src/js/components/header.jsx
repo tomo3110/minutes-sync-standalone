@@ -5,7 +5,7 @@ import m from 'mithril';
 */
 const Header = {
     view(ctrl, args) {
-        return <nav className='navbar navbar-default myheader' >
+        return <nav className='navbar navbar-default' >
             <div className='container-fluid myheader-in'>
                 <div className='navbar-header myheader-main'>
                     <button

@@ -8,8 +8,8 @@ import MinutesAddInput from '../../components/minutes.add.input.jsx';
 const ItemView = {
     view(ctrl, item) {
         return <div className='item'>
-            <h3>{item.title}</h3>
             <section><img src='https://placehold.it/150x150'></img></section>
+            <h3>{item.title}</h3>
             <p>{item.text}</p>
         </div>;
     }
@@ -34,7 +34,7 @@ export default class Top {
                         <p>会議自体が仕事になっていませんか？</p>,
                         <p>会議のあるべき姿を取り戻しましょう。</p>
                     ]}/>
-                    <h3 className='characteristic'>特徴</h3>
+                    <h2 className='characteristic'>特徴</h2>
                     <div className='mymarketing'>
                         <ListView list={[
                             {

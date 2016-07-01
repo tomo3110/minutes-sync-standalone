@@ -1,7 +1,25 @@
 // $icon-font-path: "bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $icon-font-path: '../fonts/';
 
-@import "node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+/*colors*/
+$nav-link-hover-bg: #b1fcdd;
+$navbar-default-toggle-hover-bg: rgba(#fff, 0);
+$navbar-default-toggle-border-color: rgba(#fff, 0);
+$navbar-default-bg: rgba(#fff, 0);
+$navbar-default-border: rgba(#fff, 0);
+$brand-success: #4ed49c;
+$brand-danger: #ff3672;
+$navbar-default-link-active-bg: #b1fcdd;
+$jumbotron-bg: rgba(#fff, 0);
+
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap.scss";
+
+a {
+    color: #4ed49c;
+    &:hover {
+        color: #0ba251;
+    }
+}
 
 .browserupgrade {
   margin: 0.2em 0;
@@ -17,13 +35,10 @@ $icon-font-path: '../fonts/';
 /* Space out content a bit */
 body {
   background-color: #ffffff;
+  // background-color: #000;
 }
 
 /* Custom page header */
-.myheader {
-    background-color: #ffffff;
-    // border: solid 1px #ffffff;
-}
 
 .myfooter {
     padding: 1rem;
@@ -71,7 +86,7 @@ body {
 /* Main marketing message and sign up button */
 .myjumbotron {
     @extend .jumbotron;
-    background-color: rgba(#000000, 0);
+    // background-color: rgba(#fff, 0.5);
     text-align: center;
     h2 {
         color: #4ed49c;
@@ -108,6 +123,11 @@ body {
 .characteristic {
     text-align: center;
     color: #4ed49c;
+    &::after {
+        content: '';
+        display: block;
+        height: 1rem;
+    }
 }
 
 .agenda--item--input {
