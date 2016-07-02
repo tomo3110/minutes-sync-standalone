@@ -27515,7 +27515,7 @@ var Top = function () {
                     }, {
                         tag: 'div',
                         children: [_mithril2.default.component(ListView, { list: [{
-                                img: '/asset/imgs/minutes.img0.png',
+                                img: '/asset/imgs/minutes.img5.png',
                                 title: '登録不要',
                                 text: '煩わしいユーザー登録、パスワード入力などはありません。今すぐに使い始めることができます。'
                             }, {
