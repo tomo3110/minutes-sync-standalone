@@ -9,6 +9,7 @@ import Header from './components/header.jsx';
 import Footer from './components/footer.jsx';
 
 import Top from './pages/top/index.jsx';
+import About from './pages/about/index.jsx';
 import Minutes from './pages/minutes/index.jsx';
 import MinutesList from './pages/minutesList/index.jsx';
 
@@ -20,7 +21,7 @@ vm.minutes.init();
 
 m.route(document.getElementById('main'), '/home', {
     '/home': new Top(),
-    '/about': new Top(vm),
+    '/about': new About(),
     '/minutes': new MinutesList(vm),
     '/minutes/:minutesId': new Minutes(vm.minutes),
     // '/howto': new MinutesList(),

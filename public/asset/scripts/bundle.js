@@ -25355,7 +25355,7 @@ var IndentEditModal = {
 exports.default = IndentEditModal;
 module.exports = exports['default'];
 
-},{"../pages/minutes/vm":87,"./modal.base.jsx":80,"mithril":43}],71:[function(require,module,exports){
+},{"../pages/minutes/vm":88,"./modal.base.jsx":80,"mithril":43}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25601,7 +25601,7 @@ var MinutesAddInput = {
 exports.default = MinutesAddInput;
 module.exports = exports['default'];
 
-},{"../vm":90,"mithril":43,"uuid":64}],74:[function(require,module,exports){
+},{"../vm":91,"mithril":43,"uuid":64}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26747,13 +26747,17 @@ var _index = require('./pages/top/index.jsx');
 
 var _index2 = _interopRequireDefault(_index);
 
-var _index3 = require('./pages/minutes/index.jsx');
+var _index3 = require('./pages/about/index.jsx');
 
 var _index4 = _interopRequireDefault(_index3);
 
-var _index5 = require('./pages/minutesList/index.jsx');
+var _index5 = require('./pages/minutes/index.jsx');
 
 var _index6 = _interopRequireDefault(_index5);
+
+var _index7 = require('./pages/minutesList/index.jsx');
+
+var _index8 = _interopRequireDefault(_index7);
 
 var _vm = require('./vm');
 
@@ -26761,15 +26765,16 @@ var _vm2 = _interopRequireDefault(_vm);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_vm2.default.minutes.init();
 // import 'babel-polyfill';
 
 
+_vm2.default.minutes.init();
+
 _mithril2.default.route(document.getElementById('main'), '/home', {
     '/home': new _index2.default(),
-    '/about': new _index2.default(_vm2.default),
-    '/minutes': new _index6.default(_vm2.default),
-    '/minutes/:minutesId': new _index4.default(_vm2.default.minutes)
+    '/about': new _index4.default(),
+    '/minutes': new _index8.default(_vm2.default),
+    '/minutes/:minutesId': new _index6.default(_vm2.default.minutes)
 });
 
 /*
@@ -26802,7 +26807,7 @@ _mithril2.default.mount(document.getElementById('footer'), {
     }
 });
 
-},{"./components/footer.jsx":67,"./components/header.jsx":68,"./pages/minutes/index.jsx":86,"./pages/minutesList/index.jsx":88,"./pages/top/index.jsx":89,"./vm":90,"bootstrap-sass/assets/javascripts/bootstrap/collapse":6,"bootstrap-sass/assets/javascripts/bootstrap/transition":7,"mithril":43}],83:[function(require,module,exports){
+},{"./components/footer.jsx":67,"./components/header.jsx":68,"./pages/about/index.jsx":86,"./pages/minutes/index.jsx":87,"./pages/minutesList/index.jsx":89,"./pages/top/index.jsx":90,"./vm":91,"bootstrap-sass/assets/javascripts/bootstrap/collapse":6,"bootstrap-sass/assets/javascripts/bootstrap/transition":7,"mithril":43}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27083,6 +27088,51 @@ var _mithril = require('mithril');
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var About = function () {
+    function About(vm) {
+        _classCallCheck(this, About);
+
+        this.controller = function () {};
+    }
+
+    _createClass(About, [{
+        key: 'view',
+        value: function view(ctrl) {
+            return {
+                tag: 'section',
+                children: [{
+                    tag: 'h2',
+                    children: ['minutes-syncとは？'],
+                    attrs: { className: 'pages-title' }
+                }],
+                attrs: { className: 'container-fluid' }
+            };;
+        }
+    }]);
+
+    return About;
+}();
+
+exports.default = About;
+module.exports = exports['default'];
+
+},{"mithril":43}],87:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _mithril = require('mithril');
+
+var _mithril2 = _interopRequireDefault(_mithril);
+
 var _tab = require('../../components/tab.jsx');
 
 var _tab2 = _interopRequireDefault(_tab);
@@ -27214,7 +27264,7 @@ var Minutes = function () {
 exports.default = Minutes;
 module.exports = exports['default'];
 
-},{"../../components/minutes.attendance.jsx":74,"../../components/minutes.content.jsx":75,"../../components/minutes.setting.jsx":78,"../../components/minutes.share.jsx":79,"../../components/tab.jsx":81,"mithril":43}],87:[function(require,module,exports){
+},{"../../components/minutes.attendance.jsx":74,"../../components/minutes.content.jsx":75,"../../components/minutes.setting.jsx":78,"../../components/minutes.share.jsx":79,"../../components/tab.jsx":81,"mithril":43}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27341,7 +27391,7 @@ var minutes = {
 exports.default = minutes;
 module.exports = exports['default'];
 
-},{"../../models/minutes.model":85,"mithril":43,"socket.io-client":49}],88:[function(require,module,exports){
+},{"../../models/minutes.model":85,"mithril":43,"socket.io-client":49}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27425,7 +27475,7 @@ var MinutesList = function () {
 exports.default = MinutesList;
 module.exports = exports['default'];
 
-},{"../../components/minutes.add.input.jsx":73,"../../components/minutes.panel.jsx":77,"../../components/tab.jsx":81,"../../models/minutes.model":85,"mithril":43}],89:[function(require,module,exports){
+},{"../../components/minutes.add.input.jsx":73,"../../components/minutes.panel.jsx":77,"../../components/tab.jsx":81,"../../models/minutes.model":85,"mithril":43}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27514,12 +27564,6 @@ var Top = function () {
                         }, {
                             tag: 'p',
                             children: ['今すぐ会議のあるべき姿を取り戻しましょう。']
-                        }, {
-                            tag: 'p',
-                            children: [{
-                                tag: 'b',
-                                children: ['minutes-sync']
-                            }, 'に登録は必要ありません。']
                         }] }, []), {
                         tag: 'h2',
                         children: ['特徴'],
@@ -27556,7 +27600,7 @@ var Top = function () {
 exports.default = Top;
 module.exports = exports['default'];
 
-},{"../../components/jumbotron.jsx":72,"../../components/minutes.add.input.jsx":73,"mithril":43,"uuid":64}],90:[function(require,module,exports){
+},{"../../components/jumbotron.jsx":72,"../../components/minutes.add.input.jsx":73,"mithril":43,"uuid":64}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27576,7 +27620,7 @@ var vm = {
 exports.default = vm;
 module.exports = exports['default'];
 
-},{"./pages/minutes/vm":87}]},{},[82])
+},{"./pages/minutes/vm":88}]},{},[82])
 
 
 //# sourceMappingURL=bundle.js.map

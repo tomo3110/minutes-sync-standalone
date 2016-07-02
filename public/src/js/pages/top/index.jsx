@@ -35,8 +35,7 @@ export default class Top {
                     text={[
                         <p>会議自体が仕事になっていませんか？</p>,
                         <p><b>minutes-sync</b>では議事録の作成、共有、配布を一括で行うことができます。</p>,
-                        <p>今すぐ会議のあるべき姿を取り戻しましょう。</p>,
-                        <p><b>minutes-sync</b>に登録は必要ありません。</p>
+                        <p>今すぐ会議のあるべき姿を取り戻しましょう。</p>
                     ]}/>
                     <h2 className='characteristic'>特徴</h2>
                     <div className='mymarketing'>
