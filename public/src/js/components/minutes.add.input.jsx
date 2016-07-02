@@ -13,9 +13,10 @@ const MinutesAddInput = {
                 title: ctrl.newMinutesTitle(),
                 minutes_id: minutesId,
                 isSave: true
+            }).then(resolt => {
+                ctrl.newMinutesTitle('');
+                m.route(`/minutes/${minutesId}`);
             });
-            ctrl.newMinutesTitle('');
-            m.route(`/minutes/${minutesId}`);
         };
         this.onkeyressed = function(e) {
             if(e.keyCode === 13) {

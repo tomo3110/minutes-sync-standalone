@@ -1,5 +1,8 @@
 var router = require('express').Router();
     uuid = require('node-uuid'),
+    NCMB = require('ncmb'),
+    ncmb = new NCMB(process.env.APPLICATION_KEY, process.env.CLIENT_KEY),
+    MinutesStore = ncmb.DataStore('Minutes');
     cache = {};
 
 exports.init = function(io) {
@@ -20,7 +23,20 @@ exports.init = function(io) {
             console.log('<= initDataGet: on');
             socket.join(data.minutes_id);
             if(cache[data.minutes_id] === undefined) {
-                cache[data.minutes_id] = data.minutes;
+                if(!data.minutes) {
+                    MinutesStore
+                        .equalTo('minutes_id', data.minutes_id)
+                        .fetch()
+                        .then(function(resolt){
+                            cache[data.minutes_id] = JSON.stringify(resolt);
+                            socket.emit('update_serve', {minutes: cache[data.minutes_id]});
+                        })
+                        .catch(function(error){
+                            console.error(error);
+                        });
+                } else {
+                    cache[data.minutes_id] = data.minutes;
+                }
             } else {
                 console.log('=> update_serve: emit');
                 socket.emit('update_serve', {minutes: cache[data.minutes_id]});
@@ -44,17 +60,62 @@ exports.init = function(io) {
             * 接続中のブラウザへ更新内容の発信
             */
             socket.broadcast.emit('update_serve', {minutes: cache[data.minutes_id]});
-            // socket.to(data.minutes_id).emit('update_serve', {minutes: JSON.parse(cache[data.minutes_id])});
-            // minutesIo.to(data.minutes_id).emit('update_serve', {minutes: cache[data.minutes_id]});
             console.log('=> update_serve: emit');
         });
 
         /*
         * 接続出来なくなったら、接続情報を削除
         */
-        socket.on('disconnect', function(socket) {
-            console.log('disconnect');
-        });
+    });
+    router.post('/new', function(req, res) {
+        if(req.body.minutes) {
+            const minutesStore = new MinutesStore(req.body.minutes);
+            minutesStore
+                .save()
+                .then(function(resolt){
+                    res.json(resolt);
+                })
+                .catch(function(error){
+                    console.log(error);
+                    res.end();
+                });
+        } else {
+            res.end();
+        }
+    });
+
+    router.post('/update', function(req, res) {
+        if(req.body.minutes) {
+            const minutesStore = new MinutesStore(req.body.minutes);
+            minutesStore
+                .update()
+                .then(function(resolt){
+                    res.json(resolt);
+                })
+                .catch(function(error){
+                    console.log(error);
+                    res.end();
+                });
+        } else {
+            res.end();
+        }
+    });
+
+    router.post('/delete', function(req, res) {
+        if(req.body.minutes) {
+            const minutesStore = new MinutesStore(req.body.minutes);
+            minutesStore
+                .delete()
+                .then(function(resolt){
+                    res.json(resolt);
+                })
+                .catch(function(error){
+                    console.log(error);
+                    res.end();
+                });
+        } else {
+            res.end();
+        }
     });
 
     return router;

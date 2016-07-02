@@ -3,17 +3,16 @@ import io from 'socket.io-client';
 import Minutes from '../../models/minutes.model';
 
 const minutes = {
-    socket(minutesId) {
+    connection(minutesId) {
         //socket.ioクライアントセットアップ
         minutes.io = io('/minutes/io');
 
         //データ取得
         m.startComputation();
-        // console.log(minutes.cache);
         minutes.data(new Minutes(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.cache[minutesId])
         });
         m.endComputation();
 
@@ -23,10 +22,8 @@ const minutes = {
             //取得したキャッシュデータをminutesにセット
             m.startComputation();
             console.log('update_serve: ');
-            minutes.deferred(data).then(res => {
-                minutes.data(new Minutes(JSON.parse(res.minutes)));
-                m.endComputation();
-            });
+            minutes.data(new Minutes(JSON.parse(data.minutes)));
+            m.endComputation();
         });
     },
     deferred(data) {
@@ -36,7 +33,11 @@ const minutes = {
     },
     newMinutes(data) {
         if(minutes.cache[data.minutes_id]) return false;
-        minutes.cache[data.minutes_id] = data;
+        return minutes.request({
+            cmd: 'new',
+            minutes_id: data.minutes_id,
+            minutes: data
+        });
     },
     addAgendaItem() {
         m.startComputation();
@@ -61,14 +62,24 @@ const minutes = {
     },
     save(minutesId) {
         if(window.localStorage) {
-            minutes.cache[minutesId] = minutes.data();
-            window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            return minutes.request({
+                cmd: 'update',
+                minutes: minutes.jsonParse(minutes.data())
+            }).then(resolt => {
+                minutes.cache[minutesId] = minutes.jsonParse(minutes.data());
+                window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            });
         }
     },
     destroy(minutesId) {
         if(window.localStorage) {
-            delete minutes.cache[minutesId];
-            window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            return minutes.request({
+                cmd: 'delete',
+                minutes: minutes.jsonParse(minutes.data())
+            }).then(resolt => {
+                delete minutes.cache[minutesId];
+                window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            });
         }
     },
     fetchAll() {
@@ -80,11 +91,38 @@ const minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
     },
     jsonParse(jsonData) {
         return JSON.parse(JSON.stringify(jsonData));
+    },
+    request(data) {
+        return m.request({
+            method: 'POST',
+            url: `${location.protocol}//${location.host}/api/v1/minutes/${data.cmd}`,
+            data: {
+                minutes_id: data.minutes_id || data.minutes.minutes_id,
+                minutes: {
+                    objectId: data.minutes.objectId,
+                    minutes_id:  data.minutes.minutes_id,
+                    title: data.minutes.title,
+                    where: data.minutes.where || '',
+                    day: data.minutes.day || '',
+                    startTime: data.minutes.startTime || '',
+                    endTime: data.minutes.endTime || '',
+                    entryList: data.minutes.entryList || [],
+                    agendaList: data.minutes.agendaList || [],
+                    secretary: data.minutes.secretary || '',
+                    isSave: (data.minutes.isSave === undefined) ? true : data.minutes.isSave
+                }
+            }
+        });
+    },
+    leaveroom(minutesId) {
+        minutes.io.emit('leaveroom', {
+            minutes_id: minutesId
+        });
     },
     init() {
         //初期化処理

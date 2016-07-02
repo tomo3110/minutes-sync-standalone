@@ -4,6 +4,7 @@ import Agenda from './agenda.model';
 export default class Minutes {
     constructor(args) {
         //props
+        this.objectId = m.prop(args.objectId || null);
         this.title = m.prop(args.title || '');
         this.minutes_id = m.prop(args.minutes_id || '');
         this.entryList = new Array();

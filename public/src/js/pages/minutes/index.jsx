@@ -10,7 +10,7 @@ export default class Minutes {
     constructor(vm) {
         this.controller = function() {
             const minutesId = m.route.param('minutesId');
-            vm.socket(minutesId);
+            vm.connection(minutesId);
             return {
                 data: vm.data,
                 newAgendaTitle: vm.newAgendaTitle,
@@ -54,6 +54,7 @@ export default class Minutes {
                 },
                 onunload() {
                     this.save();
+                    vm.leaveroom(minutesId);
                 }
             };
         }

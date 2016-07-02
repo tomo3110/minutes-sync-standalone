@@ -25559,9 +25559,10 @@ var MinutesAddInput = {
                 title: ctrl.newMinutesTitle(),
                 minutes_id: minutesId,
                 isSave: true
+            }).then(function (resolt) {
+                ctrl.newMinutesTitle('');
+                _mithril2.default.route('/minutes/' + minutesId);
             });
-            ctrl.newMinutesTitle('');
-            _mithril2.default.route('/minutes/' + minutesId);
         };
         this.onkeyressed = function (e) {
             if (e.keyCode === 13) {
@@ -27013,6 +27014,7 @@ var Minutes = function () {
         _classCallCheck(this, Minutes);
 
         //props
+        this.objectId = _mithril2.default.prop(args.objectId || null);
         this.title = _mithril2.default.prop(args.title || '');
         this.minutes_id = _mithril2.default.prop(args.minutes_id || '');
         this.entryList = new Array();
@@ -27108,9 +27110,85 @@ var About = function () {
                     tag: 'h2',
                     children: ['minutes-syncとは？'],
                     attrs: { className: 'pages-title' }
+                }, {
+                    tag: 'p',
+                    children: ['議事録の管理で消耗している人の力になるべく製作・運営されています。']
+                }, {
+                    tag: 'section',
+                    children: [{
+                        tag: 'div',
+                        children: [{
+                            tag: 'p',
+                            children: [{
+                                tag: 'img',
+                                attrs: { style: 'width: 150px;height: 150px;', src: '/asset/imgs/minutes.img5.png' }
+                            }],
+                            attrs: { style: 'text-align: center;' }
+                        }],
+                        attrs: { className: 'col-sm-3' }
+                    }, {
+                        tag: 'div',
+                        children: [{
+                            tag: 'section',
+                            children: ['テスト'],
+                            attrs: { className: '' }
+                        }],
+                        attrs: { className: 'col-sm-9' }
+                    }],
+                    attrs: { className: 'container-fluid-card' }
+                }, {
+                    tag: 'br'
+                }, {
+                    tag: 'section',
+                    children: [{
+                        tag: 'div',
+                        children: [{
+                            tag: 'p',
+                            children: [{
+                                tag: 'img',
+                                attrs: { style: 'width: 150px;height: 150px;', src: '/asset/imgs/minutes.img3.png' }
+                            }],
+                            attrs: { style: 'text-align: center;' }
+                        }],
+                        attrs: { className: 'col-sm-3' }
+                    }, {
+                        tag: 'div',
+                        children: [{
+                            tag: 'section',
+                            children: ['テスト'],
+                            attrs: { className: '' }
+                        }],
+                        attrs: { className: 'col-sm-9' }
+                    }],
+                    attrs: { className: 'container-fluid-card' }
+                }, {
+                    tag: 'br'
+                }, {
+                    tag: 'section',
+                    children: [{
+                        tag: 'div',
+                        children: [{
+                            tag: 'p',
+                            children: [{
+                                tag: 'img',
+                                attrs: { style: 'width: 150px;height: 150px;', src: '/asset/imgs/minutes.img2.png' }
+                            }],
+                            attrs: { style: 'text-align: center;' }
+                        }],
+                        attrs: { className: 'col-sm-3' }
+                    }, {
+                        tag: 'div',
+                        children: [{
+                            tag: 'section',
+                            children: ['テスト'],
+                            attrs: { className: '' }
+                        }],
+                        attrs: { className: 'col-sm-9' }
+                    }],
+                    attrs: { className: 'container-fluid-card' }
                 }],
-                attrs: { className: 'container-fluid' }
-            };;
+                attrs: { className: 'container' }
+            };
         }
     }]);
 
@@ -27163,7 +27241,7 @@ var Minutes = function () {
 
         this.controller = function () {
             var minutesId = _mithril2.default.route.param('minutesId');
-            vm.socket(minutesId);
+            vm.connection(minutesId);
             return {
                 data: vm.data,
                 newAgendaTitle: vm.newAgendaTitle,
@@ -27209,6 +27287,7 @@ var Minutes = function () {
                 },
                 onunload: function onunload() {
                     this.save();
+                    vm.leaveroom(minutesId);
                 }
             };
         };
@@ -27286,17 +27365,16 @@ var _minutes2 = _interopRequireDefault(_minutes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var minutes = {
-    socket: function socket(minutesId) {
+    connection: function connection(minutesId) {
         //socket.ioクライアントセットアップ
         minutes.io = (0, _socket2.default)('/minutes/io');
 
         //データ取得
         _mithril2.default.startComputation();
-        // console.log(minutes.cache);
         minutes.data(new _minutes2.default(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.cache[minutesId])
         });
         _mithril2.default.endComputation();
 
@@ -27305,10 +27383,8 @@ var minutes = {
             //取得したキャッシュデータをminutesにセット
             _mithril2.default.startComputation();
             console.log('update_serve: ');
-            minutes.deferred(data).then(function (res) {
-                minutes.data(new _minutes2.default(JSON.parse(res.minutes)));
-                _mithril2.default.endComputation();
-            });
+            minutes.data(new _minutes2.default(JSON.parse(data.minutes)));
+            _mithril2.default.endComputation();
         });
     },
     deferred: function deferred(data) {
@@ -27318,7 +27394,11 @@ var minutes = {
     },
     newMinutes: function newMinutes(data) {
         if (minutes.cache[data.minutes_id]) return false;
-        minutes.cache[data.minutes_id] = data;
+        return minutes.request({
+            cmd: 'new',
+            minutes_id: data.minutes_id,
+            minutes: data
+        });
     },
     addAgendaItem: function addAgendaItem() {
         _mithril2.default.startComputation();
@@ -27345,14 +27425,24 @@ var minutes = {
     },
     save: function save(minutesId) {
         if (window.localStorage) {
-            minutes.cache[minutesId] = minutes.data();
-            window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            return minutes.request({
+                cmd: 'update',
+                minutes: minutes.jsonParse(minutes.data())
+            }).then(function (resolt) {
+                minutes.cache[minutesId] = minutes.jsonParse(minutes.data());
+                window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            });
         }
     },
     destroy: function destroy(minutesId) {
         if (window.localStorage) {
-            delete minutes.cache[minutesId];
-            window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            return minutes.request({
+                cmd: 'delete',
+                minutes: minutes.jsonParse(minutes.data())
+            }).then(function (resolt) {
+                delete minutes.cache[minutesId];
+                window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+            });
         }
     },
     fetchAll: function fetchAll() {
@@ -27364,11 +27454,38 @@ var minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data)
+            minutes: JSON.stringify(minutes.data())
         });
     },
     jsonParse: function jsonParse(jsonData) {
         return JSON.parse(JSON.stringify(jsonData));
+    },
+    request: function request(data) {
+        return _mithril2.default.request({
+            method: 'POST',
+            url: location.protocol + '//' + location.host + '/api/v1/minutes/' + data.cmd,
+            data: {
+                minutes_id: data.minutes_id || data.minutes.minutes_id,
+                minutes: {
+                    objectId: data.minutes.objectId,
+                    minutes_id: data.minutes.minutes_id,
+                    title: data.minutes.title,
+                    where: data.minutes.where || '',
+                    day: data.minutes.day || '',
+                    startTime: data.minutes.startTime || '',
+                    endTime: data.minutes.endTime || '',
+                    entryList: data.minutes.entryList || [],
+                    agendaList: data.minutes.agendaList || [],
+                    secretary: data.minutes.secretary || '',
+                    isSave: data.minutes.isSave === undefined ? true : data.minutes.isSave
+                }
+            }
+        });
+    },
+    leaveroom: function leaveroom(minutesId) {
+        minutes.io.emit('leaveroom', {
+            minutes_id: minutesId
+        });
     },
     init: function init() {
         //初期化処理

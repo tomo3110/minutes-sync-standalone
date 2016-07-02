@@ -39,7 +39,7 @@ const IndentModalBody = {
             </div>
             <div className='row'>
                 <section className='col-md-6' style='padding: 1rem;'>
-                <div className='btn-group' role="group">
+                <div className='btn-group' role='group'>
                     <button className='btn btn-default' onclick={body.callback.decrement}>
                         <i className='glyphicon glyphicon-arrow-left'></i>
                     </button>

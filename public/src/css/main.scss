@@ -90,6 +90,7 @@ body {
     text-align: center;
     h2 {
         color: #4ed49c;
+        font-size: 28px;
     }
     p {
         color: #000000;
@@ -208,6 +209,17 @@ body {
 
 .container-card {
     @extend .container;
+    padding: 0;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 3px 5px #ccc;
+    .content {
+        padding: 1rem;
+    }
+}
+
+.container-fluid-card {
+    @extend .container-fluid;
     padding: 0;
     background: #fff;
     border-radius: 3px;

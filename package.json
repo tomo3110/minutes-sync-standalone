@@ -37,6 +37,7 @@
     "mithril": "^0.2.5",
     "moment": "^2.13.0",
     "morgan": "^1.7.0",
+    "ncmb": "^2.1.1",
     "node-uuid": "^1.4.7",
     "pdfmake": "^0.1.18",
     "serve-favicon": "^2.3.0",
