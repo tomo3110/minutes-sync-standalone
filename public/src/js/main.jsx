@@ -35,7 +35,7 @@ m.route(document.getElementById('main'), '/home', {
 m.mount(document.getElementById('header'), {
     view(ctrl) {
         return <Header
-            title='Nakuse the "that" !'
+            title='minutes-sync'
             list={[
                 {
                     name: 'このサービスについて',

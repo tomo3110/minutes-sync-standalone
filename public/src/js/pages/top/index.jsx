@@ -8,7 +8,9 @@ import MinutesAddInput from '../../components/minutes.add.input.jsx';
 const ItemView = {
     view(ctrl, item) {
         return <div className='item'>
-            <section><img src='https://placehold.it/150x150'></img></section>
+            <section>
+                <img src={item.img}></img>
+            </section>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
         </div>;
@@ -18,7 +20,7 @@ const ItemView = {
 const ListView = {
     view(ctrl, props) {
         return <section>
-            {props.list.map(item => <ItemView title={item.title} text={item.text}/>)}
+            {props.list.map(item => <ItemView title={item.title} text={item.text} img={item.img}/>)}
         </section>;
     }
 };
@@ -38,12 +40,15 @@ export default class Top {
                     <div className='mymarketing'>
                         <ListView list={[
                             {
+                                img: '/asset/imgs/minutes.img0.png',
                                 title: '登録不要',
                                 text: '煩わしいユーザー登録、パスワード入力などはありません。今すぐに使い始めることができます。'
                             },{
+                                img: '/asset/imgs/minutes.img3.png',
                                 title: '議事録の高速同期',
                                 text: 'どこから会議に参加しても同じ情報を瞬時にチームに共有します。余計な仕事をあなたにさせるつもりはありません。'
                             },{
+                                img: '/asset/imgs/minutes.img2.png',
                                 title: 'モバイル対応',
                                 text: 'いつでも、どこでも、会議に参加することができます。'
                             }
@@ -53,3 +58,4 @@ export default class Top {
         </div>;
     }
 }
+//http://placehold.it/150x149

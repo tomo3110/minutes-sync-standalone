@@ -26782,7 +26782,7 @@ _mithril2.default.route(document.getElementById('main'), '/home', {
 _mithril2.default.mount(document.getElementById('header'), {
     view: function view(ctrl) {
         return _mithril2.default.component(_header2.default, {
-            title: 'Nakuse the "that" !',
+            title: 'minutes-sync',
             list: [{
                 name: 'このサービスについて',
                 href: '/about',
@@ -27462,7 +27462,7 @@ var ItemView = {
                 tag: 'section',
                 children: [{
                     tag: 'img',
-                    attrs: { src: 'https://placehold.it/150x150' }
+                    attrs: { src: item.img }
                 }]
             }, {
                 tag: 'h3',
@@ -27481,7 +27481,7 @@ var ListView = {
         return {
             tag: 'section',
             children: [props.list.map(function (item) {
-                return _mithril2.default.component(ItemView, { title: item.title, text: item.text }, []);
+                return _mithril2.default.component(ItemView, { title: item.title, text: item.text, img: item.img }, []);
             })]
         };
     }
@@ -27515,12 +27515,15 @@ var Top = function () {
                     }, {
                         tag: 'div',
                         children: [_mithril2.default.component(ListView, { list: [{
+                                img: '/asset/imgs/minutes.img0.png',
                                 title: '登録不要',
                                 text: '煩わしいユーザー登録、パスワード入力などはありません。今すぐに使い始めることができます。'
                             }, {
+                                img: '/asset/imgs/minutes.img3.png',
                                 title: '議事録の高速同期',
                                 text: 'どこから会議に参加しても同じ情報を瞬時にチームに共有します。余計な仕事をあなたにさせるつもりはありません。'
                             }, {
+                                img: '/asset/imgs/minutes.img2.png',
                                 title: 'モバイル対応',
                                 text: 'いつでも、どこでも、会議に参加することができます。'
                             }] }, [])],
@@ -27535,6 +27538,8 @@ var Top = function () {
 
     return Top;
 }();
+//http://placehold.it/150x149
+
 
 exports.default = Top;
 module.exports = exports['default'];
