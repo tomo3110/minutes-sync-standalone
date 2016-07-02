@@ -13,7 +13,7 @@ const minutes = {
         minutes.data(new Minutes(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data())
+            minutes: JSON.stringify(minutes.data)
         });
         m.endComputation();
 
@@ -80,7 +80,7 @@ const minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data())
+            minutes: JSON.stringify(minutes.data)
         });
     },
     jsonParse(jsonData) {

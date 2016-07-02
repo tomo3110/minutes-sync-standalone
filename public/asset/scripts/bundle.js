@@ -25513,11 +25513,11 @@ var Jumbotron = {
             }, {
                 tag: 'section',
                 children: [args.text],
-                attrs: { className: 'locad', key: 'catch-copy-text' }
+                attrs: { className: 'locad' }
             }, {
                 tag: 'section',
                 children: [args.content],
-                attrs: { key: 'catch-copy-content' }
+                attrs: { className: 'catch-copy-content' }
             }],
             attrs: { className: 'myjumbotron' }
         };
@@ -27246,7 +27246,7 @@ var minutes = {
         minutes.data(new _minutes2.default(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data())
+            minutes: JSON.stringify(minutes.data)
         });
         _mithril2.default.endComputation();
 
@@ -27314,7 +27314,7 @@ var minutes = {
         console.log('dataSync: ');
         minutes.io.emit('update_client', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.data())
+            minutes: JSON.stringify(minutes.data)
         });
     },
     jsonParse: function jsonParse(jsonData) {
@@ -27507,7 +27507,19 @@ var Top = function () {
                             children: ['会議自体が仕事になっていませんか？']
                         }, {
                             tag: 'p',
-                            children: ['会議のあるべき姿を取り戻しましょう。']
+                            children: [{
+                                tag: 'b',
+                                children: ['minutes-sync']
+                            }, 'では議事録の作成、共有、配布を一括で行うことができます。']
+                        }, {
+                            tag: 'p',
+                            children: ['今すぐ会議のあるべき姿を取り戻しましょう。']
+                        }, {
+                            tag: 'p',
+                            children: [{
+                                tag: 'b',
+                                children: ['minutes-sync']
+                            }, 'に登録は必要ありません。']
                         }] }, []), {
                         tag: 'h2',
                         children: ['特徴'],

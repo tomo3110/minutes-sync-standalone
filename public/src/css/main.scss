@@ -87,11 +87,9 @@ body {
 /* Main marketing message and sign up button */
 .myjumbotron {
     @extend .jumbotron;
-    // background-color: rgba(#fff, 0.5);
     text-align: center;
     h2 {
         color: #4ed49c;
-        margin-bottom: 3rem;
     }
     p {
         color: #000000;
@@ -128,11 +126,6 @@ body {
 .characteristic {
     text-align: center;
     color: #4ed49c;
-    &::after {
-        content: '';
-        display: block;
-        height: 1rem;
-    }
 }
 
 .agenda--item--input {
