@@ -2,6 +2,7 @@ import m from 'mithril';
 import $ from 'jquery';
 import Clipboard from 'clipboard';
 import 'jquery-qrcode';
+// import pdfMake from 'pdfmake';
 
 const border = '------------------------------------------------------------------------------------------------------';
 const nl = '\n';
@@ -133,6 +134,9 @@ const MinutesShareText = {
 const MinutesShare = {
     controller: function(share) {
         const ctrl = this;
+        this.pdf = function() {
+            share.makePDF();
+        };
         this.baseUrl = `${location.protocol}//${location.host}/?${m.route()}`;
         this.config = function(element, init) {
             if(init) {
@@ -155,6 +159,8 @@ const MinutesShare = {
                 <div className='col-sm-6'>
                     <h5>URLのコピー</h5>
                     <MinutesShareCopy url={ctrl.baseUrl}/>
+                    <button className='btn btn-default btn-block' onclick={ctrl.pdf}>PDF</button>
+                    <a className='btn btn-default btn-block' id='download' download='minutes.pdf'>PDFダウンロード</a>
                 </div>
             </section>
             <hr/>

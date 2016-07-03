@@ -1,6 +1,12 @@
 import m from 'mithril';
 import io from 'socket.io-client';
 import Minutes from '../../models/minutes.model';
+import PDFDocument from 'pdfkit';
+import blobStream from 'blob-stream';
+
+const docs = new PDFDocument;
+const stream = docs.pipe(blobStream());
+// docs.font('');
 
 const minutes = {
     connection(minutesId) {
@@ -24,6 +30,12 @@ const minutes = {
             console.log('update_serve: ');
             minutes.data(new Minutes(JSON.parse(data.minutes)));
             m.endComputation();
+        });
+
+        stream.on('finish', () => {
+            const blob = stream.toBlob('application/pdf');
+            const url = stream.toBlobURL('application/pdf');
+            window.open(url);
         });
     },
     deferred(data) {
@@ -97,6 +109,11 @@ const minutes = {
     jsonParse(jsonData) {
         return JSON.parse(JSON.stringify(jsonData));
     },
+    makePDF(data) {
+        docs.fontSize(30)
+            .text('こんにちは');
+        docs.end();
+    },
     request(data) {
         return m.request({
             method: 'POST',
@@ -139,6 +156,7 @@ const minutes = {
         minutes.newDay = m.prop('');
         minutes.newStartTime = m.prop('');
         minutes.newEndTime = m.prop('');
+        minutes.pdfData = m.prop();
     }
 }
 

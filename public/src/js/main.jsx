@@ -1,15 +1,13 @@
-
-// import 'babel-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap/collapse';
 import 'bootstrap-sass/assets/javascripts/bootstrap/transition';
 
 import m from 'mithril';
+import attachFastClick from 'fastclick';
 
 import Header from './components/header.jsx';
 import Footer from './components/footer.jsx';
 
 import Top from './pages/top/index.jsx';
-import About from './pages/about/index.jsx';
 import Minutes from './pages/minutes/index.jsx';
 import MinutesList from './pages/minutesList/index.jsx';
 
@@ -19,12 +17,12 @@ import vm from './vm';
 
 vm.minutes.init();
 
+attachFastClick(document.body);
+
 m.route(document.getElementById('main'), '/home', {
     '/home': new Top(),
-    '/about': new About(),
     '/minutes': new MinutesList(vm),
     '/minutes/:minutesId': new Minutes(vm.minutes),
-    // '/howto': new MinutesList(),
 });
 
 /*
@@ -39,10 +37,6 @@ m.mount(document.getElementById('header'), {
             title='minutes-sync'
             list={[
                 {
-                    name: 'このサービスについて',
-                    href: '/about',
-                    isSignIn: false
-                },{
                     name: '議事録一覧',
                     href: '/minutes',
                     isSignIn: false

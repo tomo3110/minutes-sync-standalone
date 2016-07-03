@@ -1,9 +1,11 @@
 var router = require('express').Router();
+    fs = require('fs'),
     uuid = require('node-uuid'),
     NCMB = require('ncmb'),
     ncmb = new NCMB(process.env.APPLICATION_KEY, process.env.CLIENT_KEY),
-    MinutesStore = ncmb.DataStore('Minutes');
+    MinutesStore = ncmb.DataStore('Minutes'),
     cache = {};
+
 
 exports.init = function(io) {
     //
@@ -47,6 +49,7 @@ exports.init = function(io) {
         */
         socket.on('leaveroom', function(data) {
             socket.leave(data.minutes_id);
+            console.log('leave connection:' + socket.client.conn.server.clientsCount);
         });
 
         socket.on('update_client', function(data) {

@@ -52,6 +52,9 @@ export default class Minutes {
                     vm.data().isSave(false);
                     vm.destroy(minutesId);
                 },
+                makePDF() {
+                    vm.makePDF();
+                },
                 onunload() {
                     this.save();
                     vm.leaveroom(minutesId);
@@ -75,21 +78,29 @@ export default class Minutes {
                         newIndent={ctrl.newIndent}
                         newSign={ctrl.newSign}/>
                 },{
-                    id: 'share-minutes',
-                    title: '共有',
-                    content: <MinutesShare
-                        data={ctrl.data}
-                        minutes_id={ctrl.data().minutes_id()}/>
-                },{
-                    id: 'attendance-minutes',
-                    title: '出席管理',
+                    id: 'agenda-minutes',
+                    title: '議案',
                     content: <MinutesAttendance
                         list={ctrl.data().entryList}
                         addAttendance={ctrl.entryAdd}
                         removeAttendance={ctrl.entryRemove}/>
                 },{
+                    id: 'attendance-minutes',
+                    title: '出席',
+                    content: <MinutesAttendance
+                        list={ctrl.data().entryList}
+                        addAttendance={ctrl.entryAdd}
+                        removeAttendance={ctrl.entryRemove}/>
+                },{
+                    id: 'share-minutes',
+                    title: '共有',
+                    content: <MinutesShare
+                        data={ctrl.data}
+                        minutes_id={ctrl.data().minutes_id()}
+                        makePDF={ctrl.makePDF}/>
+                },{
                     id: 'setting-minutes',
-                    title: '設定・その他',
+                    title: '管理',
                     content: <MinutesSetting
                         data={ctrl.data}
                         update={ctrl.update}
