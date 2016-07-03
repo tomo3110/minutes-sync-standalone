@@ -159,8 +159,6 @@ const MinutesShare = {
                 <div className='col-sm-6'>
                     <h5>URLのコピー</h5>
                     <MinutesShareCopy url={ctrl.baseUrl}/>
-                    <button className='btn btn-default btn-block' onclick={ctrl.pdf}>PDF</button>
-                    <a className='btn btn-default btn-block' id='download' download='minutes.pdf'>PDFダウンロード</a>
                 </div>
             </section>
             <hr/>

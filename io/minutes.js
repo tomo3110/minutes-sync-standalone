@@ -1,9 +1,6 @@
 var router = require('express').Router();
     fs = require('fs'),
     uuid = require('node-uuid'),
-    NCMB = require('ncmb'),
-    ncmb = new NCMB(process.env.APPLICATION_KEY, process.env.CLIENT_KEY),
-    MinutesStore = ncmb.DataStore('Minutes'),
     cache = {};
 
 
@@ -26,16 +23,15 @@ exports.init = function(io) {
             socket.join(data.minutes_id);
             if(cache[data.minutes_id] === undefined) {
                 if(!data.minutes) {
-                    MinutesStore
-                        .equalTo('minutes_id', data.minutes_id)
-                        .fetch()
-                        .then(function(resolt){
-                            cache[data.minutes_id] = JSON.stringify(resolt);
+                    const file = './.minutes/' + data.minutes_id + '.json';
+                    fs.readFile(file, 'utf8', function(err, sou) {
+                        if(err) {
+                            console.log('err:' + err);
+                        } else {
+                            cache[data.minutes_id] = sou;
                             socket.emit('update_serve', {minutes: cache[data.minutes_id]});
-                        })
-                        .catch(function(error){
-                            console.error(error);
-                        });
+                        }
+                    });
                 } else {
                     cache[data.minutes_id] = data.minutes;
                 }
@@ -72,16 +68,15 @@ exports.init = function(io) {
     });
     router.post('/new', function(req, res) {
         if(req.body.minutes) {
-            const minutesStore = new MinutesStore(req.body.minutes);
-            minutesStore
-                .save()
-                .then(function(resolt){
-                    res.json(resolt);
-                })
-                .catch(function(error){
-                    console.log(error);
+            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
+            const data = JSON.stringify(req.body.minutes);
+            fs.writeFile(file, data, function(err, data) {
+                if(err) {
+                    console.log(err);
+                } else {
                     res.end();
-                });
+                }
+            });
         } else {
             res.end();
         }
@@ -89,16 +84,15 @@ exports.init = function(io) {
 
     router.post('/update', function(req, res) {
         if(req.body.minutes) {
-            const minutesStore = new MinutesStore(req.body.minutes);
-            minutesStore
-                .update()
-                .then(function(resolt){
-                    res.json(resolt);
-                })
-                .catch(function(error){
-                    console.log(error);
+            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
+            const data = JSON.stringify(req.body.minutes);
+            fs.writeFile(file, data, function(err, data) {
+                if(err) {
+                    console.log(err);
+                } else {
                     res.end();
-                });
+                }
+            });
         } else {
             res.end();
         }
@@ -106,16 +100,12 @@ exports.init = function(io) {
 
     router.post('/delete', function(req, res) {
         if(req.body.minutes) {
-            const minutesStore = new MinutesStore(req.body.minutes);
-            minutesStore
-                .delete()
-                .then(function(resolt){
-                    res.json(resolt);
-                })
-                .catch(function(error){
-                    console.log(error);
-                    res.end();
-                });
+            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
+            const data = JSON.stringify(req.body.minutes);
+            fs.unlink(file,function(err) {
+                if(err) throw err;
+                res.end();
+            });
         } else {
             res.end();
         }

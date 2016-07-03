@@ -23,6 +23,11 @@ const MinutesAddInput = {
                 ctrl.add();
             }
         };
+        this.config = function(element, init, context) {
+            if(!init) {
+                element.focus();
+            }
+        };
     },
     view(ctrl, addMinutes) {
         return <section className='form-group'>
@@ -32,7 +37,8 @@ const MinutesAddInput = {
                     placeholder='あなたの会議の議題'
                     value={ctrl.newMinutesTitle()}
                     onkeypress={ctrl.onkeyressed}
-                    oninput={m.withAttr('value', ctrl.newMinutesTitle)}/>
+                    oninput={m.withAttr('value', ctrl.newMinutesTitle)}
+                    config={ctrl.config}/>
                 <span className='input-group-btn'>
                     <button type='button' className={`btn btn-success btn-${addMinutes.size || 'sm'}`} onclick={ctrl.add}>
                         議事録の作成

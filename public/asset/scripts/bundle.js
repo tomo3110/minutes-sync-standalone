@@ -44028,12 +44028,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var IndentModalBody = {
     controller: function controller(body) {
         var ctrl = this;
+        this.config = function (element, init, context) {
+            if (!init) {
+                element.focus();
+            }
+        };
         this.keypressed = function (e) {
             // console.log(e);
             switch (e.keyCode) {
                 case 13:
                     {
-                        if (e.altKey) {
+                        if (!e.altKey) {
                             body.callback.exit();
                         }
                         break;
@@ -44083,6 +44088,7 @@ var IndentModalBody = {
                         value: body.content(),
                         oninput: _mithril2.default.withAttr('value', body.content),
                         onkeypress: ctrl.keypressed,
+                        config: ctrl.config,
                         rows: '7' }
                 }],
                 attrs: { className: 'form-group' }
@@ -44192,6 +44198,7 @@ var IndentEditModal = {
         this.callback = function () {
             _mithril2.default.startComputation();
             args.content(ctrl.editContent());
+            ctrl.editContent('');
             args.callback();
             _mithril2.default.endComputation();
         };
@@ -44472,6 +44479,11 @@ var MinutesAddInput = {
                 ctrl.add();
             }
         };
+        this.config = function (element, init, context) {
+            if (!init) {
+                element.focus();
+            }
+        };
     },
     view: function view(ctrl, addMinutes) {
         return {
@@ -44485,7 +44497,8 @@ var MinutesAddInput = {
                         placeholder: 'あなたの会議の議題',
                         value: ctrl.newMinutesTitle(),
                         onkeypress: ctrl.onkeyressed,
-                        oninput: _mithril2.default.withAttr('value', ctrl.newMinutesTitle) }
+                        oninput: _mithril2.default.withAttr('value', ctrl.newMinutesTitle),
+                        config: ctrl.config }
                 }, {
                     tag: 'span',
                     children: [{
@@ -45492,15 +45505,7 @@ var MinutesShare = {
                     children: [{
                         tag: 'h5',
                         children: ['URLのコピー']
-                    }, _mithril2.default.component(MinutesShareCopy, { url: ctrl.baseUrl }, []), {
-                        tag: 'button',
-                        children: ['PDF'],
-                        attrs: { className: 'btn btn-default btn-block', onclick: ctrl.pdf }
-                    }, {
-                        tag: 'a',
-                        children: ['PDFダウンロード'],
-                        attrs: { className: 'btn btn-default btn-block', id: 'download', download: 'minutes.pdf' }
-                    }],
+                    }, _mithril2.default.component(MinutesShareCopy, { url: ctrl.baseUrl }, [])],
                     attrs: { className: 'col-sm-6' }
                 }],
                 attrs: { className: 'row' }

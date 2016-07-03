@@ -5,11 +5,16 @@ import vm from '../pages/minutes/vm';
 const IndentModalBody = {
     controller: function(body) {
         const ctrl = this;
+        this.config = function(element, init, context) {
+            if(!init) {
+                element.focus();
+            }
+        };
         this.keypressed = function(e) {
             // console.log(e);
             switch (e.keyCode) {
                 case 13: {
-                    if(e.altKey) {
+                    if(!e.altKey) {
                         body.callback.exit();
                     }
                     break;
@@ -51,6 +56,7 @@ const IndentModalBody = {
                     value={body.content()}
                     oninput={m.withAttr('value', body.content)}
                     onkeypress={ctrl.keypressed}
+                    config={ctrl.config}
                     rows='7'></textarea>
             </div>
             <div className='row'>
@@ -116,6 +122,7 @@ const IndentEditModal = {
         this.callback = function() {
             m.startComputation();
             args.content(ctrl.editContent());
+            ctrl.editContent('');
             args.callback();
             m.endComputation();
         };
