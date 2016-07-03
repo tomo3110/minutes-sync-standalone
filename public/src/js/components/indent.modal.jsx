@@ -4,6 +4,21 @@ import vm from '../pages/minutes/vm';
 
 const IndentModalBody = {
     controller: function(body) {
+        const ctrl = this;
+        this.keypressed = function(e) {
+            // console.log(e);
+            switch (e.keyCode) {
+                case 13: {
+                    if(e.altKey) {
+                        body.callback.exit();
+                    }
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        };
         this.signOkColor = function() {
             if(body.sign() === 1) {
                 return '#2bc60b';
@@ -35,7 +50,8 @@ const IndentModalBody = {
                     id={`${body.id}-textarea`}
                     value={body.content()}
                     oninput={m.withAttr('value', body.content)}
-                    rows='10'></textarea>
+                    onkeypress={ctrl.keypressed}
+                    rows='7'></textarea>
             </div>
             <div className='row'>
                 <section className='col-md-6' style='padding: 1rem;'>
@@ -94,53 +110,60 @@ const IndentModalFooter = {
 
 const IndentEditModal = {
     controller: function(args) {
-        return {
-            indentIncrement: function() {
-                args.indentItem.indentIncrement();
-                vm.dataSync(m.route.param('minutesId'));
-            },
-            indentDecrement: function() {
-                args.indentItem.indentDecrement();
-                vm.dataSync(m.route.param('minutesId'));
-            },
-            signOk: function() {
-                args.indentItem.signOk();
-                vm.dataSync(m.route.param('minutesId'));
-                args.callback();
-            },
-            signTask: function() {
-                args.indentItem.signTask();
-                vm.dataSync(m.route.param('minutesId'));
-                args.callback();
-            },
-            signImportant: function() {
-                args.indentItem.signImportant();
-                vm.dataSync(m.route.param('minutesId'));
-                args.callback();
-            },
-            indentSplice: function() {
-                args.indentItem.addChildren({
-                    content: '',
-                    indent: args.indentItem.indent() + 1
-                });
-                vm.dataSync(m.route.param('minutesId'));
-                args.callback();
-            },
-            remove: function() {
-                args.removeChildren();
-                vm.dataSync(m.route.param('minutesId'));
-                args.callback();
-            }
+        const ctrl = this;
+        this.editContent = m.prop(args.content() || '');
+        this.minutesId = m.route.param('minutesId');
+        this.callback = function() {
+            m.startComputation();
+            args.content(ctrl.editContent());
+            args.callback();
+            m.endComputation();
+        };
+        this.indentIncrement = function() {
+            args.indentItem.indentIncrement();
+            vm.dataSync(ctrl.minutesId);
+        };
+        this.indentDecrement = function() {
+            args.indentItem.indentDecrement();
+            vm.dataSync(ctrl.minutesId);
+        };
+        this.signOk = function() {
+            args.indentItem.signOk();
+            vm.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.signTask = function() {
+            args.indentItem.signTask();
+            vm.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.signImportant = function() {
+            args.indentItem.signImportant();
+            vm.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.indentSplice = function() {
+            args.indentItem.addChildren({
+                content: '',
+                indent: args.indentItem.indent() + 1
+            });
+            vm.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.remove = function() {
+            args.removeChildren();
+            vm.dataSync(ctrl.minutesId);
+            ctrl.callback();
         };
     },
     view(ctrl, args) {//tabindex="-1" role="dialog"
         return <ModalBase
             id={args.id}
-            callback={args.callback}
+            callback={ctrl.callback}
             content={[
                 <IndentModalBody
                     id={args.id}
-                    content={args.content}
+                    content={ctrl.editContent}
                     indent={args.indent}
                     sign={args.sign}
                     callback={{
@@ -150,9 +173,10 @@ const IndentEditModal = {
                         signTask: ctrl.signTask,
                         signImportant: ctrl.signImportant,
                         indentSplice: ctrl.indentSplice,
-                        remove: ctrl.remove
+                        remove: ctrl.remove,
+                        exit: ctrl.callback
                     }}/>,
-                    <IndentModalFooter callback={args.callback}/>
+                    <IndentModalFooter callback={ctrl.callback}/>
                 ]}/>;
     }
 }

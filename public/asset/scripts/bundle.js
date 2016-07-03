@@ -44027,6 +44027,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var IndentModalBody = {
     controller: function controller(body) {
+        var ctrl = this;
+        this.keypressed = function (e) {
+            // console.log(e);
+            switch (e.keyCode) {
+                case 13:
+                    {
+                        if (e.altKey) {
+                            body.callback.exit();
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        };
         this.signOkColor = function () {
             if (body.sign() === 1) {
                 return '#2bc60b';
@@ -44065,7 +44082,8 @@ var IndentModalBody = {
                         id: body.id + '-textarea',
                         value: body.content(),
                         oninput: _mithril2.default.withAttr('value', body.content),
-                        rows: '10' }
+                        onkeypress: ctrl.keypressed,
+                        rows: '7' }
                 }],
                 attrs: { className: 'form-group' }
             }, {
@@ -44168,53 +44186,60 @@ var IndentModalFooter = {
 
 var IndentEditModal = {
     controller: function controller(args) {
-        return {
-            indentIncrement: function indentIncrement() {
-                args.indentItem.indentIncrement();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-            },
-            indentDecrement: function indentDecrement() {
-                args.indentItem.indentDecrement();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-            },
-            signOk: function signOk() {
-                args.indentItem.signOk();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-                args.callback();
-            },
-            signTask: function signTask() {
-                args.indentItem.signTask();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-                args.callback();
-            },
-            signImportant: function signImportant() {
-                args.indentItem.signImportant();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-                args.callback();
-            },
-            indentSplice: function indentSplice() {
-                args.indentItem.addChildren({
-                    content: '',
-                    indent: args.indentItem.indent() + 1
-                });
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-                args.callback();
-            },
-            remove: function remove() {
-                args.removeChildren();
-                _vm2.default.dataSync(_mithril2.default.route.param('minutesId'));
-                args.callback();
-            }
+        var ctrl = this;
+        this.editContent = _mithril2.default.prop(args.content() || '');
+        this.minutesId = _mithril2.default.route.param('minutesId');
+        this.callback = function () {
+            _mithril2.default.startComputation();
+            args.content(ctrl.editContent());
+            args.callback();
+            _mithril2.default.endComputation();
+        };
+        this.indentIncrement = function () {
+            args.indentItem.indentIncrement();
+            _vm2.default.dataSync(ctrl.minutesId);
+        };
+        this.indentDecrement = function () {
+            args.indentItem.indentDecrement();
+            _vm2.default.dataSync(ctrl.minutesId);
+        };
+        this.signOk = function () {
+            args.indentItem.signOk();
+            _vm2.default.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.signTask = function () {
+            args.indentItem.signTask();
+            _vm2.default.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.signImportant = function () {
+            args.indentItem.signImportant();
+            _vm2.default.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.indentSplice = function () {
+            args.indentItem.addChildren({
+                content: '',
+                indent: args.indentItem.indent() + 1
+            });
+            _vm2.default.dataSync(ctrl.minutesId);
+            ctrl.callback();
+        };
+        this.remove = function () {
+            args.removeChildren();
+            _vm2.default.dataSync(ctrl.minutesId);
+            ctrl.callback();
         };
     },
     view: function view(ctrl, args) {
         //tabindex="-1" role="dialog"
         return _mithril2.default.component(_modalBase2.default, {
             id: args.id,
-            callback: args.callback,
+            callback: ctrl.callback,
             content: [_mithril2.default.component(IndentModalBody, {
                 id: args.id,
-                content: args.content,
+                content: ctrl.editContent,
                 indent: args.indent,
                 sign: args.sign,
                 callback: {
@@ -44224,8 +44249,9 @@ var IndentEditModal = {
                     signTask: ctrl.signTask,
                     signImportant: ctrl.signImportant,
                     indentSplice: ctrl.indentSplice,
-                    remove: ctrl.remove
-                } }, []), _mithril2.default.component(IndentModalFooter, { callback: args.callback }, [])] }, []);
+                    remove: ctrl.remove,
+                    exit: ctrl.callback
+                } }, []), _mithril2.default.component(IndentModalFooter, { callback: ctrl.callback }, [])] }, []);
     }
 };
 
