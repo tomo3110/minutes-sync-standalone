@@ -8,3 +8,4 @@ config.js
 scratch/
 public/js/data.js
 sample.data.minutes.json
+.minutes

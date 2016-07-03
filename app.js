@@ -11,7 +11,7 @@ var express = require('express'),
     io = require('socket.io')(http);
 
 // view engine setup
-    
+
 // uncomment after placing your favicon in /public
 app.use(helmet());
 app.use(logger('dev'));

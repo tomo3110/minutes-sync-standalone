@@ -1,10 +1,17 @@
 var router = require('express').Router();
     fs = require('fs'),
     uuid = require('node-uuid'),
+    minutesDirName = './.minutes',
     cache = {};
 
 
 exports.init = function(io) {
+
+    fs.mkdir(minutesDirName, function(err) {
+        if(err){
+            console.log(err);
+        };
+    });
     //
     //socket.io
     //議事録の新規作成
