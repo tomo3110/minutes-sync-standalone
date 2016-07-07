@@ -11,9 +11,7 @@
     "test": "karma start",
     "start": "node app.js",
     "gulp": "gulp watch",
-    "wp:watch": "webpack --watch",
-    "bs:init": "browser-sync init",
-    "bs:serve": "browser-sync start --config bs-config.js"
+    "gulp-run": "gulp"
   },
   "author": "",
   "license": "MIT",
@@ -49,7 +47,6 @@
   "devDependencies": {
     "babel-plugin-espower": "^2.2.0",
     "babelify": "^7.3.0",
-    "browser-sync": "^2.12.10",
     "browserify": "^13.0.1",
     "browserify-shim": "^3.8.12",
     "del": "^2.2.0",
@@ -76,7 +73,6 @@
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.3",
     "main-bower-files": "^2.13.1",
-    "mithril": "^0.2.4",
     "mocha": "^2.5.3",
     "node-sass": "^3.7.0",
     "power-assert": "^1.4.1",

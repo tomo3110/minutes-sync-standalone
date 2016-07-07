@@ -44037,7 +44037,6 @@ var IndentModalBody = {
             }
         };
         this.keypressed = function (e) {
-            console.log(e);
             switch (e.keyCode) {
                 case 13:
                     {
@@ -46207,7 +46206,7 @@ var Minutes = function () {
                     vm.dataSync(minutesId);
                 },
                 save: function save() {
-                    if (this.data().isSave()) {
+                    if (vm.data().isSave()) {
                         vm.save(minutesId);
                     }
                 },

@@ -47,7 +47,7 @@ export default class Minutes {
                     vm.dataSync(minutesId);
                 },
                 save() {
-                    if (this.data().isSave()) {
+                    if (vm.data().isSave()) {
                         vm.save(minutesId);
                     }
                 },

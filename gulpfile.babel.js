@@ -1,7 +1,6 @@
 // generated on 2016-05-04 using generator-webapp 2.0.0
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
-import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
 import browserify from 'browserify';
@@ -11,7 +10,6 @@ import buffer from 'vinyl-buffer';
 import source from 'vinyl-source-stream';
 
 const $ = gulpLoadPlugins();
-const reload = browserSync.reload;
 
 gulp.task('styles', () => {
   return gulp.src('public/src/css/*.scss')
@@ -24,8 +22,7 @@ gulp.task('styles', () => {
     }).on('error', $.sass.logError))
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('public/asset/styles'))
-    .pipe(reload({stream: true}));
+    .pipe(gulp.dest('public/asset/styles'));
 });
 
 gulp.task('scripts', () => {
@@ -43,8 +40,7 @@ gulp.task('scripts', () => {
     .pipe(buffer())//+
     .pipe($.sourcemaps.init({loadMaps: true}))//+
     .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('public/asset/scripts'))
-    .pipe(reload({stream: true}));
+    .pipe(gulp.dest('public/asset/scripts'));
 });
 
 function lint(files, options) {
@@ -76,7 +72,6 @@ const lintOptions = {
 };
 
 gulp.task('lint', lint('public/src/js/**/*.js', lintOptions));
-// gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
 gulp.task('html', ['styles', 'scripts'], () => {
   return gulp.src('public/*.html')
@@ -88,7 +83,7 @@ gulp.task('html', ['styles', 'scripts'], () => {
 });
 
 gulp.task('images', () => {
-  return gulp.src('public/src/images/**/*')
+  return gulp.src('public/src/imgs/**/*')
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -96,7 +91,7 @@ gulp.task('images', () => {
       // as hooks for embedding and styling
       svgoPlugins: [{cleanupIDs: false}]
     })))
-    .pipe(gulp.dest('asset/images'));
+    .pipe(gulp.dest('public/asset/imgs'));
 });
 
 gulp.task('fonts', () => {
@@ -116,67 +111,16 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['public/asset']));
 
-gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    server: {
-      baseDir: ['.tmp', 'app'],
-      routes: {
-        '/bower_components': 'bower_components'
-      }
-    }
-  });
-
-  gulp.watch([
-    '/*.html',
-    'public/images/**/*',
-    '.tmp/fonts/**/*'
-  ]).on('change', reload);
-
-  gulp.watch('public/styles/**/*.scss', ['styles']);
-  gulp.watch('public/scripts/**/*.js', ['scripts']);
-  gulp.watch('public/scripts/**/*.jsx', ['scripts']);
-  gulp.watch('public/fonts/**/*', ['fonts']);
-  gulp.watch('bower.json', ['wiredep', 'fonts']);
-});
-
-gulp.task('watch', ['styles', 'scripts', 'fonts'], () => {
+gulp.task('watched', ['styles', 'scripts', 'fonts', 'images'], () => {
     gulp.watch('public/src/css/*.scss', ['styles']);
     gulp.watch('public/src/js/**/*.js', ['scripts']);
     gulp.watch('public/src/js/**/*.jsx', ['scripts']);
     gulp.watch('public/src/fonts/**/*', ['fonts']);
-    // gulp.watch('bower.json', ['wiredep', 'fonts']);
+    gulp.watch('public/src/imgs/**/*', ['images']);
 });
 
-gulp.task('serve:dist', () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    server: {
-      baseDir: ['dist']
-    }
-  });
-});
-
-gulp.task('serve:test', ['scripts'], () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    ui: false,
-    server: {
-      baseDir: 'test',
-      routes: {
-        '/scripts': '.tmp/scripts',
-        '/bower_components': 'bower_components'
-      }
-    }
-  });
-
-  gulp.watch('public/src/js/**/*.js', ['scripts']);
-  gulp.watch('public/src/js/**/*.jsx', ['scripts']);
-  // gulp.watch('test/spec/**/*.js').on('change', reload);
-  // gulp.watch('test/spec/**/*.js', ['lint:test']);
+gulp.task('watch', ['clean'], () => {
+    gulp.start('watched');
 });
 
 // inject bower components

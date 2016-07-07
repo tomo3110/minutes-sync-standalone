@@ -11,7 +11,6 @@ const IndentModalBody = {
             }
         };
         this.keypressed = function(e) {
-            console.log(e);
             switch (e.keyCode) {
                 case 13: {
                     if(!e.altKey) {
