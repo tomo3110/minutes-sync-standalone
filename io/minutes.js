@@ -4,7 +4,7 @@ var router = require('express').Router(),
     validator = require('validator'),
     fs = require('fs'),
     uuid = require('node-uuid'),
-    minutesDirName = './.minutes',
+    minutesDirName = './minutes',
     cache = {};
 
 exports.init = function(io) {
