@@ -46206,9 +46206,6 @@ var Minutes = function () {
                 update: function update() {
                     vm.dataSync(minutesId);
                 },
-                toggleEditTitle: function toggleEditTitle() {
-                    this.isEditTitle(!this.isEditTitle());
-                },
                 save: function save() {
                     if (this.data().isSave()) {
                         vm.save(minutesId);

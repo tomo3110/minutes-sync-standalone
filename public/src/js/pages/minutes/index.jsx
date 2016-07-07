@@ -46,9 +46,6 @@ export default class Minutes {
                 update() {
                     vm.dataSync(minutesId);
                 },
-                toggleEditTitle() {
-                    this.isEditTitle(!this.isEditTitle());
-                },
                 save() {
                     if (this.data().isSave()) {
                         vm.save(minutesId);
