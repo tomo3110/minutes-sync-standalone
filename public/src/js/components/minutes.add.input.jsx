@@ -9,13 +9,18 @@ const MinutesAddInput = {
         this.add = function() {
             if(ctrl.newMinutesTitle() === '') return false;
             const minutesId = uuid.v4();
-            vm.minutes.newMinutes({
+            return vm.minutes.newMinutes({
                 title: ctrl.newMinutesTitle(),
                 minutes_id: minutesId,
                 isSave: true
             }).then(resolt => {
+                vm.minutes.cache[minutesId] = vm.minutes.jsonParse(resolt);
+                window.localStorage.setItem('minutes_sync', JSON.stringify(vm.minutes.cache));
                 ctrl.newMinutesTitle('');
+                return resolt;
+            }).then(resolt => {
                 m.route(`/minutes/${minutesId}`);
+                return resolt;
             });
         };
         this.onkeyressed = function(e) {

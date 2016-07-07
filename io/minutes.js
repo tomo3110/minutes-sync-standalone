@@ -34,7 +34,7 @@ exports.init = function(io) {
         socket.on('init', function(data) {
             try {
                 if (!validator.isUUID(data.minutes_id, 4)) {
-                    throw Error('minutes_id != uuid ver4');
+                    throw new Error('minutes_id != uuid ver4');
                 }
                 console.log('<= initDataGet: on');
                 socket.join(data.minutes_id, function(err) {
@@ -53,7 +53,7 @@ exports.init = function(io) {
                                     cache[data.minutes_id] = sou;
                                     socket.emit('update_serve', {minutes: cache[data.minutes_id]});
                                 } else {
-                                    throw Error('data.minutes != JSON');
+                                    throw new Error('data.minutes != JSON');
                                 }
                             }
                         });
@@ -61,7 +61,7 @@ exports.init = function(io) {
                         if (validator.isJSON(data.minutes)) {
                             cache[data.minutes_id] = data.minutes;
                         } else {
-                            throw Error('data.minutes != JSON');
+                            throw new Error('data.minutes != JSON');
                         }
                     }
                 } else {
@@ -69,29 +69,19 @@ exports.init = function(io) {
                         cache[data.minutes_id] = data.minutes;
                         socket.emit('update_serve', {minutes: cache[data.minutes_id]});
                     } else {
-                        throw Error('data.minutes != JSON');
+                        throw new Error('data.minutes != JSON');
                     }
                     console.log('=> update_serve: emit');
                 }
             } catch (e) {
                 console.log(e);
-            }
-        });
-        /*
-        * 更新イベントの待受
-        */
-        socket.on('leaveroom', function(data) {
-            try {
-                if (!validator.isUUID(data.minutes_id, 4)) {
-                    throw Error('minutes_id != uuid ver4');
-                }
-                socket.leave(data.minutes_id);
-                console.log('leave connection:' + socket.client.conn.server.clientsCount);
-            } catch (e) {
-                console.log(e);
+                socket.emit('update_serve', {minutes: "{}", error: e});
             }
         });
 
+        /*
+        * 更新イベントの待受
+        */
         socket.on('update_client', function(data) {
 
             /*
@@ -99,13 +89,13 @@ exports.init = function(io) {
             */
             try {
                 if (!validator.isJSON(data.minutes)) {
-                    throw Error('data.minutes != JSON');
+                    throw new Error('data.minutes != JSON');
                 }
                 if (!validator.isUUID(data.minutes_id, 4)) {
-                    throw Error('data.minutes != UUID.v4');
+                    throw new Error('data.minutes != UUID.v4');
                 }
                 if (!validator.isJSON(cache[data.minutes_id])) {
-                    throw Error('data.minutes != UUID.v4');
+                    throw new Error('data.minutes != UUID.v4');
                 }
 
                 cache[data.minutes_id] = data.minutes;
@@ -117,43 +107,46 @@ exports.init = function(io) {
                 console.log('=> update_serve: emit');
             } catch (e) {
                 console.log(e);
+
             }
         });
 
         /*
         * 接続出来なくなったら、接続情報を削除
         */
+        // socket.on('disconnect', function(data) {
+        //     console.log('disconnect:' + socket.client.conn.server.clientsCount);
+        // });
     });
     router.post('/new', function(req, res) {
         try {
-            if(!validator.isJSON(req.body.minutes) ) {
-                throw Error('typeof not json');
-            }
             const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
             const data = JSON.stringify(req.body.minutes);
-            fs.writeFile(file, data, function(err) {
-                if(err) {throw err;}
-                res.end();
+            fs.writeFile(file, data, function(err, sou) {
+                if(err) {
+                    throw err;
+                } else {
+                    res.send(data);
+                }
             });
         } catch (e) {
-            console.log(e.message);
-            res.end();
+            console.log(e);
+            res.send(e);
         }
     });
 
     router.post('/update', function(req, res) {
         try {
             if(!validator.isUUID(req.body.minutes.minutes_id)) {
-                throw Error('not uuid v4');
-                res.end();
+                throw new Error('not uuid v4');
             }
             const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
             const data = JSON.stringify(req.body.minutes);
             fs.writeFile(file, data, function(err, data) {
                 if(err) {
-                    console.log(err);
-                    res.end();
+                    throw err;
                 }
+                res.end();
             });
         } catch (e) {
             console.log(e);
@@ -163,13 +156,14 @@ exports.init = function(io) {
 
     router.post('/delete', function(req, res) {
         try {
-            if(!validator.isJSON(req.body.minutes.minutes_id)) {
-                throw Error('not JSON');
+            if(!validator.isUUID(req.body.minutes.minutes_id)) {
+                throw new Error('not UUID v4');
             }
             const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
-            const data = JSON.stringify(req.body.minutes);
             fs.unlink(file,function(err) {
-                if(err) throw err;
+                if(err) {
+                    throw err;
+                }
                 res.end();
             });
         } catch (e) {

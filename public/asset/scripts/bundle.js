@@ -43902,9 +43902,12 @@ var Header = {
                         children: [{
                             tag: 'a',
                             children: [args.title],
-                            attrs: { href: '/', config: _mithril2.default.route }
+                            attrs: { href: '/home', config: _mithril2.default.route }
+                        }, {
+                            tag: 'div',
+                            children: [args.version]
                         }],
-                        attrs: { className: 'navbar-brand mybrand' }
+                        attrs: { className: 'mybrand' }
                     }],
                     attrs: { className: 'navbar-header myheader-main' }
                 }, {
@@ -44034,7 +44037,7 @@ var IndentModalBody = {
             }
         };
         this.keypressed = function (e) {
-            // console.log(e);
+            console.log(e);
             switch (e.keyCode) {
                 case 13:
                     {
@@ -44200,29 +44203,25 @@ var IndentEditModal = {
             args.content(ctrl.editContent());
             ctrl.editContent('');
             args.callback();
+            _vm2.default.dataSync(ctrl.minutesId);
             _mithril2.default.endComputation();
         };
         this.indentIncrement = function () {
             args.indentItem.indentIncrement();
-            _vm2.default.dataSync(ctrl.minutesId);
         };
         this.indentDecrement = function () {
             args.indentItem.indentDecrement();
-            _vm2.default.dataSync(ctrl.minutesId);
         };
         this.signOk = function () {
             args.indentItem.signOk();
-            _vm2.default.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.signTask = function () {
             args.indentItem.signTask();
-            _vm2.default.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.signImportant = function () {
             args.indentItem.signImportant();
-            _vm2.default.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.indentSplice = function () {
@@ -44231,11 +44230,9 @@ var IndentEditModal = {
                 indent: args.indentItem.indent() + 1
             });
             _vm2.default.dataSync(ctrl.minutesId);
-            ctrl.callback();
         };
         this.remove = function () {
             args.removeChildren();
-            _vm2.default.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
     },
@@ -44265,7 +44262,7 @@ var IndentEditModal = {
 exports.default = IndentEditModal;
 module.exports = exports['default'];
 
-},{"../pages/minutes/vm":170,"./modal.base.jsx":163,"mithril":58}],154:[function(require,module,exports){
+},{"../pages/minutes/vm":171,"./modal.base.jsx":164,"mithril":58}],154:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44465,13 +44462,18 @@ var MinutesAddInput = {
         this.add = function () {
             if (ctrl.newMinutesTitle() === '') return false;
             var minutesId = _uuid2.default.v4();
-            _vm2.default.minutes.newMinutes({
+            return _vm2.default.minutes.newMinutes({
                 title: ctrl.newMinutesTitle(),
                 minutes_id: minutesId,
                 isSave: true
             }).then(function (resolt) {
+                _vm2.default.minutes.cache[minutesId] = _vm2.default.minutes.jsonParse(resolt);
+                window.localStorage.setItem('minutes_sync', JSON.stringify(_vm2.default.minutes.cache));
                 ctrl.newMinutesTitle('');
+                return resolt;
+            }).then(function (resolt) {
                 _mithril2.default.route('/minutes/' + minutesId);
+                return resolt;
             });
         };
         this.onkeyressed = function (e) {
@@ -44518,7 +44520,122 @@ var MinutesAddInput = {
 exports.default = MinutesAddInput;
 module.exports = exports['default'];
 
-},{"../vm":173,"mithril":58,"uuid":147}],157:[function(require,module,exports){
+},{"../vm":174,"mithril":58,"uuid":147}],157:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.MinutesAgendaAdd = exports.MinutesAgendaItem = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _mithril = require('mithril');
+
+var _mithril2 = _interopRequireDefault(_mithril);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MinutesAgendaItem = exports.MinutesAgendaItem = {
+    controller: function controller(item) {
+        return {
+            remove: function remove() {
+                item.remove(item.index);
+            }
+        };
+    },
+    view: function view(ctrl, item) {
+        return {
+            tag: 'section',
+            children: [{
+                tag: 'div',
+                children: [{
+                    tag: 'span',
+                    children: [{
+                        tag: 'button',
+                        children: ['削除'],
+                        attrs: { className: 'btn btn-danger', onclick: ctrl.remove }
+                    }],
+                    attrs: { className: 'input-group-btn' }
+                }, {
+                    tag: 'input',
+                    attrs: { type: 'text',
+                        className: 'form-control',
+                        id: 'list-' + item.index,
+                        value: item.title(),
+                        oninput: _mithril2.default.withAttr('value', item.title) }
+                }],
+                attrs: { className: 'input-group' }
+            }],
+            attrs: { className: 'form-group' }
+        };
+    }
+};
+
+var MinutesAgendaAdd = exports.MinutesAgendaAdd = {
+    controller: function controller(addItem) {
+        var ctrl = this;
+        this.newTitle = addItem.newTitle;
+        this.add = function () {
+            addItem.add();
+        };
+        this.keypressed = function (e) {
+            if (e.keyCode === 13) {
+                ctrl.add();
+            }
+        };
+    },
+    view: function view(ctrl, addItem) {
+        return {
+            tag: 'section',
+            children: [{
+                tag: 'span',
+                children: [{
+                    tag: 'button',
+                    children: ['追加'],
+                    attrs: { className: 'btn btn-success', onclick: ctrl.add }
+                }],
+                attrs: { className: 'input-group-btn' }
+            }, {
+                tag: 'input',
+                attrs: { type: 'text',
+                    className: 'form-control',
+                    id: 'list-add',
+                    placeholder: '新しい議案',
+                    onkeypress: ctrl.keypressed,
+                    value: ctrl.newTitle(),
+                    oninput: _mithril2.default.withAttr('value', ctrl.newTitle) }
+            }],
+            attrs: { className: 'input-group' }
+        };
+    }
+};
+
+var MinutesAgendaList = {
+    view: function view(ctrl, agenda) {
+        return {
+            tag: 'div',
+            children: [{
+                tag: 'h3',
+                children: ['議案一覧']
+            }, {
+                tag: 'section',
+                children: [agenda.data().agendaList.map(function (item, index) {
+                    return _mithril2.default.component(MinutesAgendaItem, _extends({
+                        remove: agenda.remove,
+                        index: index
+                    }, item), []);
+                }), _mithril2.default.component(MinutesAgendaAdd, { newTitle: agenda.newTitle, add: agenda.add }, [])],
+                attrs: { className: 'form' }
+            }],
+            attrs: { className: 'content' }
+        };
+    }
+};
+
+exports.default = MinutesAgendaList;
+
+},{"mithril":58}],158:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44631,7 +44748,7 @@ var MinutesAttendance = {
 
 exports.default = MinutesAttendance;
 
-},{"mithril":58}],158:[function(require,module,exports){
+},{"mithril":58}],159:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44681,7 +44798,7 @@ var Minutes = {
 exports.default = Minutes;
 module.exports = exports['default'];
 
-},{"./agenda.view.jsx":149,"./minutes.info.jsx":159,"mithril":58}],159:[function(require,module,exports){
+},{"./agenda.view.jsx":149,"./minutes.info.jsx":160,"mithril":58}],160:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44760,7 +44877,7 @@ var MinutesInfo = {
 exports.default = MinutesInfo;
 module.exports = exports['default'];
 
-},{"mithril":58,"moment":59}],160:[function(require,module,exports){
+},{"mithril":58,"moment":59}],161:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44886,7 +45003,7 @@ var MinutesPanelView = {
 exports.default = MinutesPanelView;
 module.exports = exports['default'];
 
-},{"mithril":58}],161:[function(require,module,exports){
+},{"mithril":58}],162:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44898,6 +45015,8 @@ var _mithril = require('mithril');
 var _mithril2 = _interopRequireDefault(_mithril);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import MinutesAgendaList from './minutes.agenda.list.jsx';
 
 var MinutesSettingInput = {
     view: function view(ctrl, item) {
@@ -45299,7 +45418,7 @@ var MinutesSetting = {
 exports.default = MinutesSetting;
 module.exports = exports['default'];
 
-},{"mithril":58}],162:[function(require,module,exports){
+},{"mithril":58}],163:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45327,12 +45446,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var border = '------------------------------------------------------------------------------------------------------';
 var nl = '\n';
-var tb = '\t';
+var tb = '　　';
+var br = '　';
 
 function setIndet(indent) {
     var resolte = '';
     for (var i = 0; i < indent; i++) {
-        resolte += tb;
+        if (i) {
+            resolte += tb;
+        } else {
+            resolte += br;
+        }
     }
     return resolte;
 };
@@ -45524,7 +45648,7 @@ var MinutesShare = {
 
 exports.default = MinutesShare;
 
-},{"clipboard":19,"jquery":57,"jquery-qrcode":56,"mithril":58}],163:[function(require,module,exports){
+},{"clipboard":19,"jquery":57,"jquery-qrcode":56,"mithril":58}],164:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45561,7 +45685,7 @@ var ModalBase = {
 exports.default = ModalBase;
 module.exports = exports['default'];
 
-},{"mithril":58}],164:[function(require,module,exports){
+},{"mithril":58}],165:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45646,7 +45770,7 @@ var TabView = {
 
 exports.default = TabView;
 
-},{"mithril":58}],165:[function(require,module,exports){
+},{"mithril":58}],166:[function(require,module,exports){
 'use strict';
 
 require('bootstrap-sass/assets/javascripts/bootstrap/collapse');
@@ -45707,6 +45831,7 @@ _mithril2.default.mount(document.getElementById('header'), {
     view: function view(ctrl) {
         return _mithril2.default.component(_header2.default, {
             title: 'minutes-sync',
+            version: 'v0.0.1',
             list: [{
                 name: '議事録一覧',
                 href: '/minutes',
@@ -45722,7 +45847,7 @@ _mithril2.default.mount(document.getElementById('footer'), {
     }
 });
 
-},{"./components/footer.jsx":150,"./components/header.jsx":151,"./pages/minutes/index.jsx":169,"./pages/minutesList/index.jsx":171,"./pages/top/index.jsx":172,"./vm":173,"bootstrap-sass/assets/javascripts/bootstrap/collapse":8,"bootstrap-sass/assets/javascripts/bootstrap/transition":9,"fastclick":47,"mithril":58}],166:[function(require,module,exports){
+},{"./components/footer.jsx":150,"./components/header.jsx":151,"./pages/minutes/index.jsx":170,"./pages/minutesList/index.jsx":172,"./pages/top/index.jsx":173,"./vm":174,"bootstrap-sass/assets/javascripts/bootstrap/collapse":8,"bootstrap-sass/assets/javascripts/bootstrap/transition":9,"fastclick":47,"mithril":58}],167:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45794,7 +45919,7 @@ var Agenda = function () {
 exports.default = Agenda;
 module.exports = exports['default'];
 
-},{"./indent.model":167,"mithril":58}],167:[function(require,module,exports){
+},{"./indent.model":168,"mithril":58}],168:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45902,7 +46027,7 @@ var Indent = function () {
 exports.default = Indent;
 module.exports = exports['default'];
 
-},{"mithril":58}],168:[function(require,module,exports){
+},{"mithril":58}],169:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -45979,6 +46104,12 @@ var Minutes = function () {
             });
         }
     }, {
+        key: 'removeAgendaList',
+        value: function removeAgendaList(index) {
+            console.log(index);
+            this.agendaList.splice(index, 1);
+        }
+    }, {
         key: 'removeEntryList',
         value: function removeEntryList(index) {
             this.entryList.splice(index, 1);
@@ -45991,7 +46122,7 @@ var Minutes = function () {
 exports.default = Minutes;
 module.exports = exports['default'];
 
-},{"./agenda.model":166,"mithril":58}],169:[function(require,module,exports){
+},{"./agenda.model":167,"mithril":58}],170:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -46020,6 +46151,10 @@ var _minutesAttendance = require('../../components/minutes.attendance.jsx');
 
 var _minutesAttendance2 = _interopRequireDefault(_minutesAttendance);
 
+var _minutesAgendaList = require('../../components/minutes.agenda.list.jsx');
+
+var _minutesAgendaList2 = _interopRequireDefault(_minutesAgendaList);
+
 var _minutesSetting = require('../../components/minutes.setting.jsx');
 
 var _minutesSetting2 = _interopRequireDefault(_minutesSetting);
@@ -46046,6 +46181,10 @@ var Minutes = function () {
                     vm.addAgendaItem();
                     vm.dataSync(minutesId);
                 },
+                agendaRemove: function agendaRemove(index) {
+                    vm.removeAgendaItem(index);
+                    // vm.dataSync(minutesId);
+                },
                 indentAdd: function indentAdd(agendaIndex) {
                     vm.addIndentItem(agendaIndex, {
                         content: '',
@@ -46071,8 +46210,9 @@ var Minutes = function () {
                     this.isEditTitle(!this.isEditTitle());
                 },
                 save: function save() {
-                    if (!vm.data().isSave()) return false;
-                    vm.save(minutesId);
+                    if (this.data().isSave()) {
+                        vm.save(minutesId);
+                    }
                 },
                 destroy: function destroy() {
                     vm.data().isSave(false);
@@ -46081,9 +46221,9 @@ var Minutes = function () {
                 makePDF: function makePDF() {
                     vm.makePDF();
                 },
-                onunload: function onunload() {
+                onunload: function onunload(e) {
+                    // e.preventDefault();
                     this.save();
-                    vm.leaveroom(minutesId);
                 }
             };
         };
@@ -46109,10 +46249,11 @@ var Minutes = function () {
                     }, {
                         id: 'agenda-minutes',
                         title: '議案',
-                        content: _mithril2.default.component(_minutesAttendance2.default, {
-                            list: ctrl.data().entryList,
-                            addAttendance: ctrl.entryAdd,
-                            removeAttendance: ctrl.entryRemove }, [])
+                        content: _mithril2.default.component(_minutesAgendaList2.default, {
+                            data: ctrl.data,
+                            add: ctrl.agendaAdd,
+                            remove: ctrl.agendaRemove,
+                            newTitle: ctrl.newAgendaTitle }, [])
                     }, {
                         id: 'attendance-minutes',
                         title: '出席',
@@ -46131,7 +46272,10 @@ var Minutes = function () {
                         id: 'setting-minutes',
                         title: '管理',
                         content: _mithril2.default.component(_minutesSetting2.default, {
+                            newTitle: ctrl.newAgendaTitle,
                             data: ctrl.data,
+                            add: ctrl.agendaAdd,
+                            remove: ctrl.agendaRemove,
                             update: ctrl.update,
                             save: ctrl.save,
                             destroy: ctrl.destroy }, [])
@@ -46147,12 +46291,14 @@ var Minutes = function () {
 exports.default = Minutes;
 module.exports = exports['default'];
 
-},{"../../components/minutes.attendance.jsx":157,"../../components/minutes.content.jsx":158,"../../components/minutes.setting.jsx":161,"../../components/minutes.share.jsx":162,"../../components/tab.jsx":164,"mithril":58}],170:[function(require,module,exports){
+},{"../../components/minutes.agenda.list.jsx":157,"../../components/minutes.attendance.jsx":158,"../../components/minutes.content.jsx":159,"../../components/minutes.setting.jsx":162,"../../components/minutes.share.jsx":163,"../../components/tab.jsx":165,"mithril":58}],171:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _mithril = require('mithril');
 
@@ -46230,6 +46376,11 @@ var minutes = {
         minutes.newAgendaTitle('');
         _mithril2.default.endComputation();
     },
+    removeAgendaItem: function removeAgendaItem(index) {
+        if (index === undefined) return false;
+        if (!(typeof index === 'undefined' ? 'undefined' : _typeof(index)) === 'number') return false;
+        minutes.data().removeAgendaList(index);
+    },
     addIndentItem: function addIndentItem(agendaIndex, item) {
         _mithril2.default.startComputation();
         minutes.data().agendaList[agendaIndex].addList(item);
@@ -46239,31 +46390,44 @@ var minutes = {
     addEntryItem: function addEntryItem() {
         var name = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 
+        if (!(typeof name === 'undefined' ? 'undefined' : _typeof(name)) === 'string') return false;
         minutes.data().addEntryList(name);
     },
     removeEntryItem: function removeEntryItem(index) {
         if (index === undefined) return false;
+        if (!(typeof index === 'undefined' ? 'undefined' : _typeof(index)) === 'number') return false;
         minutes.data().removeEntryList(index);
     },
     save: function save(minutesId) {
         if (window.localStorage) {
+            _mithril2.default.startComputation();
             return minutes.request({
                 cmd: 'update',
                 minutes: minutes.jsonParse(minutes.data())
             }).then(function (resolt) {
                 minutes.cache[minutesId] = minutes.jsonParse(minutes.data());
                 window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+                return resolt;
+            }).then(function (resolt) {
+                _mithril2.default.endComputation();
+                return resolt;
             });
         }
     },
     destroy: function destroy(minutesId) {
         if (window.localStorage) {
+            _mithril2.default.startComputation();
             return minutes.request({
                 cmd: 'delete',
                 minutes: minutes.jsonParse(minutes.data())
             }).then(function (resolt) {
                 delete minutes.cache[minutesId];
                 window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+                return resolt;
+            }).then(function (resolt) {
+                _mithril2.default.endComputation();
+                _mithril2.default.route('/minutes');
+                return resolt;
             });
         }
     },
@@ -46308,8 +46472,8 @@ var minutes = {
             }
         });
     },
-    leaveroom: function leaveroom(minutesId) {
-        minutes.io.emit('leaveroom', {
+    disconnect: function disconnect(minutesId) {
+        minutes.io.emit('disconnect', {
             minutes_id: minutesId
         });
     },
@@ -46335,7 +46499,7 @@ var minutes = {
 exports.default = minutes;
 module.exports = exports['default'];
 
-},{"../../models/minutes.model":168,"blob-stream":6,"mithril":58,"pdfkit":76,"socket.io-client":128}],171:[function(require,module,exports){
+},{"../../models/minutes.model":169,"blob-stream":6,"mithril":58,"pdfkit":76,"socket.io-client":128}],172:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -46383,7 +46547,7 @@ var MinutesList = function () {
         _classCallCheck(this, MinutesList);
 
         this.controller = function () {
-            this.list = values(vm.minutes.fetchAll()) || [];
+            this.list = values(vm.minutes.cache) || [];
             this.newTitle = vm.minutes.newTitle;
             this.newWhere = vm.minutes.newWhere;
             this.newDay = vm.minutes.newDay;
@@ -46419,7 +46583,7 @@ var MinutesList = function () {
 exports.default = MinutesList;
 module.exports = exports['default'];
 
-},{"../../components/minutes.add.input.jsx":156,"../../components/minutes.panel.jsx":160,"../../components/tab.jsx":164,"../../models/minutes.model":168,"mithril":58}],172:[function(require,module,exports){
+},{"../../components/minutes.add.input.jsx":156,"../../components/minutes.panel.jsx":161,"../../components/tab.jsx":165,"../../models/minutes.model":169,"mithril":58}],173:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -46544,7 +46708,7 @@ var Top = function () {
 exports.default = Top;
 module.exports = exports['default'];
 
-},{"../../components/jumbotron.jsx":155,"../../components/minutes.add.input.jsx":156,"mithril":58,"uuid":147}],173:[function(require,module,exports){
+},{"../../components/jumbotron.jsx":155,"../../components/minutes.add.input.jsx":156,"mithril":58,"uuid":147}],174:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -46564,7 +46728,7 @@ var vm = {
 exports.default = vm;
 module.exports = exports['default'];
 
-},{"./pages/minutes/vm":170}]},{},[165])
+},{"./pages/minutes/vm":171}]},{},[166])
 
 
 //# sourceMappingURL=bundle.js.map

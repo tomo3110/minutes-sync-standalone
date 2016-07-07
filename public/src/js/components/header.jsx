@@ -18,8 +18,9 @@ const Header = {
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                     </button>
-                    <div className='navbar-brand mybrand'>
-                        <a href='/' config={m.route}>{args.title}</a>
+                    <div className='mybrand'>
+                        <a href='/home' config={m.route}>{args.title}</a>
+                        <div>{args.version}</div>
                     </div>
                 </div>
                 <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>

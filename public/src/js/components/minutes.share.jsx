@@ -6,12 +6,17 @@ import 'jquery-qrcode';
 
 const border = '------------------------------------------------------------------------------------------------------';
 const nl = '\n';
-const tb = '\t';
+const tb = '　　';
+const br = '　';
 
 function setIndet(indent) {
     let resolte = '';
     for (var i = 0; i < indent; i++) {
-        resolte += tb;
+        if(i) {
+            resolte += tb;
+        } else {
+            resolte += br;
+        }
     }
     return resolte;
 };

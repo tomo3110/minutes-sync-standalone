@@ -16,14 +16,14 @@ function values(obj) {
 
 export default class MinutesList {
     constructor(vm) {
-            this.controller = function() {
-                this.list = values(vm.minutes.fetchAll()) || [];
-                this.newTitle = vm.minutes.newTitle;
-                this.newWhere = vm.minutes.newWhere;
-                this.newDay = vm.minutes.newDay;
-                this.newStartTime = vm.minutes.newStartTime;
-                this.newEndTime = vm.minutes.newEndTime;
-            };
+        this.controller = function() {
+            this.list = values(vm.minutes.cache) || [];
+            this.newTitle = vm.minutes.newTitle;
+            this.newWhere = vm.minutes.newWhere;
+            this.newDay = vm.minutes.newDay;
+            this.newStartTime = vm.minutes.newStartTime;
+            this.newEndTime = vm.minutes.newEndTime;
+        };
     }
     view(ctrl) {
         return <div className='container-fluid'>

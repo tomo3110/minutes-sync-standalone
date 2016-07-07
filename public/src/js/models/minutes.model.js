@@ -33,6 +33,10 @@ export default class Minutes {
     addEntryListAll(list = []) {
         list.map(item => this.addEntryList(item));
     }
+    removeAgendaList(index) {
+        console.log(index);
+        this.agendaList.splice(index, 1);
+    }
     removeEntryList(index) {
         this.entryList.splice(index, 1);
     }

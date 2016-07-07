@@ -59,6 +59,11 @@ const minutes = {
         minutes.newAgendaTitle('');
         m.endComputation();
     },
+    removeAgendaItem(index) {
+        if (index === undefined) return false;
+        if (!typeof index === 'number') return false;
+        minutes.data().removeAgendaList(index);
+    },
     addIndentItem(agendaIndex, item) {
         m.startComputation();
         minutes.data().agendaList[agendaIndex].addList(item);
@@ -66,31 +71,44 @@ const minutes = {
         m.endComputation();
     },
     addEntryItem(name = '') {
+        if (!typeof name === 'string') return false;
         minutes.data().addEntryList(name);
     },
     removeEntryItem(index) {
         if(index === undefined) return false;
+        if (!typeof index === 'number') return false;
         minutes.data().removeEntryList(index);
     },
     save(minutesId) {
         if(window.localStorage) {
+            m.startComputation();
             return minutes.request({
                 cmd: 'update',
                 minutes: minutes.jsonParse(minutes.data())
             }).then(resolt => {
                 minutes.cache[minutesId] = minutes.jsonParse(minutes.data());
                 window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+                return resolt;
+            }).then(resolt => {
+                m.endComputation();
+                return resolt;
             });
         }
     },
     destroy(minutesId) {
         if(window.localStorage) {
+            m.startComputation();
             return minutes.request({
                 cmd: 'delete',
                 minutes: minutes.jsonParse(minutes.data())
             }).then(resolt => {
                 delete minutes.cache[minutesId];
                 window.localStorage.setItem('minutes_sync', JSON.stringify(minutes.cache));
+                return resolt;
+            }).then(resolt => {
+                m.endComputation();
+                m.route('/minutes');
+                return resolt;
             });
         }
     },
@@ -136,8 +154,8 @@ const minutes = {
             }
         });
     },
-    leaveroom(minutesId) {
-        minutes.io.emit('leaveroom', {
+    disconnect(minutesId) {
+        minutes.io.emit('disconnect', {
             minutes_id: minutesId
         });
     },

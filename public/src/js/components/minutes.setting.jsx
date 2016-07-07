@@ -1,5 +1,7 @@
 import m from 'mithril';
 
+// import MinutesAgendaList from './minutes.agenda.list.jsx';
+
 const MinutesSettingInput = {
     view(ctrl, item) {
         return <section className='form-group'>
@@ -208,6 +210,13 @@ const MinutesSetting = {
                     trueText='許可する'
                     falseText='許可しない'/>
                 <hr/>
+                {/*<h3>議案一覧</h3>
+                <MinutesAgendaList
+                    data={setting.data}
+                    add={setting.add}
+                    remove={setting.remove}
+                    newTitle={setting.newTitle}/>
+                <hr/>*/}
                 <h3>議事録の更新</h3>
                 <button className='btn btn-default btn-block' onclick={setting.update}>議事録を更新する</button>
                 <hr/>

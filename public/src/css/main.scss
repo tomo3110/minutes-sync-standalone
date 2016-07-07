@@ -67,7 +67,21 @@ body {
 }
 
 .mybrand {
-  padding-left: 3rem;
+    @extend .navbar-brand;
+    padding-left: 3rem;
+    display: inline-block;
+    a {
+        display: inline-block;
+    }
+    div {
+        display: inline-block;
+        font-size: 10px;
+        &:before {
+            content: '';
+            display: inline-block;
+            width: 1rem;
+        }
+    }
 }
 .mynav-btn {
   margin-right: 1rem;

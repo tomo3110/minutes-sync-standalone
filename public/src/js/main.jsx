@@ -35,6 +35,7 @@ m.mount(document.getElementById('header'), {
     view(ctrl) {
         return <Header
             title='minutes-sync'
+            version='v0.0.1'
             list={[
                 {
                     name: '議事録一覧',

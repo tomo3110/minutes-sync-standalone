@@ -11,7 +11,7 @@ const IndentModalBody = {
             }
         };
         this.keypressed = function(e) {
-            // console.log(e);
+            console.log(e);
             switch (e.keyCode) {
                 case 13: {
                     if(!e.altKey) {
@@ -124,29 +124,25 @@ const IndentEditModal = {
             args.content(ctrl.editContent());
             ctrl.editContent('');
             args.callback();
+            vm.dataSync(ctrl.minutesId);
             m.endComputation();
         };
         this.indentIncrement = function() {
             args.indentItem.indentIncrement();
-            vm.dataSync(ctrl.minutesId);
         };
         this.indentDecrement = function() {
             args.indentItem.indentDecrement();
-            vm.dataSync(ctrl.minutesId);
         };
         this.signOk = function() {
             args.indentItem.signOk();
-            vm.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.signTask = function() {
             args.indentItem.signTask();
-            vm.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.signImportant = function() {
             args.indentItem.signImportant();
-            vm.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
         this.indentSplice = function() {
@@ -155,11 +151,9 @@ const IndentEditModal = {
                 indent: args.indentItem.indent() + 1
             });
             vm.dataSync(ctrl.minutesId);
-            ctrl.callback();
         };
         this.remove = function() {
             args.removeChildren();
-            vm.dataSync(ctrl.minutesId);
             ctrl.callback();
         };
     },

@@ -4,6 +4,7 @@ import TabView from '../../components/tab.jsx';
 import MinutesView from '../../components/minutes.content.jsx';
 import MinutesShare from '../../components/minutes.share.jsx';
 import MinutesAttendance from '../../components/minutes.attendance.jsx';
+import MinutesAgendaList from '../../components/minutes.agenda.list.jsx';
 import MinutesSetting from '../../components/minutes.setting.jsx';
 
 export default class Minutes {
@@ -21,6 +22,10 @@ export default class Minutes {
                 agendaAdd() {
                     vm.addAgendaItem();
                     vm.dataSync(minutesId);
+                },
+                agendaRemove(index) {
+                    vm.removeAgendaItem(index);
+                    // vm.dataSync(minutesId);
                 },
                 indentAdd(agendaIndex) {
                     vm.addIndentItem(agendaIndex, {
@@ -45,8 +50,9 @@ export default class Minutes {
                     this.isEditTitle(!this.isEditTitle());
                 },
                 save() {
-                    if(!vm.data().isSave()) return false;
-                    vm.save(minutesId);
+                    if (this.data().isSave()) {
+                        vm.save(minutesId);
+                    }
                 },
                 destroy() {
                     vm.data().isSave(false);
@@ -55,9 +61,9 @@ export default class Minutes {
                 makePDF() {
                     vm.makePDF();
                 },
-                onunload() {
+                onunload(e) {
+                    // e.preventDefault();
                     this.save();
-                    vm.leaveroom(minutesId);
                 }
             };
         }
@@ -80,10 +86,11 @@ export default class Minutes {
                 },{
                     id: 'agenda-minutes',
                     title: '議案',
-                    content: <MinutesAttendance
-                        list={ctrl.data().entryList}
-                        addAttendance={ctrl.entryAdd}
-                        removeAttendance={ctrl.entryRemove}/>
+                    content: <MinutesAgendaList
+                        data={ctrl.data}
+                        add={ctrl.agendaAdd}
+                        remove={ctrl.agendaRemove}
+                        newTitle={ctrl.newAgendaTitle}/>
                 },{
                     id: 'attendance-minutes',
                     title: '出席',
@@ -102,7 +109,10 @@ export default class Minutes {
                     id: 'setting-minutes',
                     title: '管理',
                     content: <MinutesSetting
+                        newTitle={ctrl.newAgendaTitle}
                         data={ctrl.data}
+                        add={ctrl.agendaAdd}
+                        remove={ctrl.agendaRemove}
                         update={ctrl.update}
                         save={ctrl.save}
                         destroy={ctrl.destroy}/>
