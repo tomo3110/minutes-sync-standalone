@@ -2,6 +2,11 @@
 
 var router = require('express').Router(),
     validator = require('validator'),
+    knex = require('knex')({
+        client: 'pg',
+        connection: process.env.PG_CONNECTION_STRING,
+        searchPath: 'knex,public'
+    }),
     fs = require('fs'),
     uuid = require('node-uuid'),
     minutesDirName = './minutes',
@@ -18,6 +23,7 @@ exports.init = function(io) {
             console.log(e.message);
         }
     });
+
     //
     //socket.io
     //議事録の新規作成
