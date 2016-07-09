@@ -7,3 +7,6 @@
 
 ### env
 - MONGO_URL
+
+### License
+MIT
