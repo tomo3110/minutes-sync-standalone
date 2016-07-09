@@ -35,7 +35,7 @@ exports.init = function(io) {
     /**
     * mongodb connection
     */
-    mongoose.connect('mongodb://' + process.env.APP_DOMAIN + '/' + process.env.APP_DB_NAME);
+    mongoose.connect(process.env.MONGO_URL);
 
     //
     //socket.io
