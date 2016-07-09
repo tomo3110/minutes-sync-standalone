@@ -35,15 +35,7 @@ exports.init = function(io) {
     /**
     * mongodb connection
     */
-    mongoose.connect('mongodb://' + process.env.APP_DOMAIN + '/sample_db');
-
-    /**
-    + mongodb test find all
-    */
-    Minutes.find({}, function(err, docs) {
-        console.log(docs);
-    });
-
+    mongoose.connect('mongodb://' + process.env.APP_DOMAIN + '/' + process.env.APP_DB_NAME);
 
     //
     //socket.io
