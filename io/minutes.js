@@ -2,27 +2,48 @@
 
 var router = require('express').Router(),
     validator = require('validator'),
-    // knex = require('knex')({
-    //     client: 'pg',
-    //     connection: process.env.PG_CONNECTION_STRING,
-    //     searchPath: 'knex,public'
-    // }),
+    mongoose = require('mongoose'),
     fs = require('fs'),
     uuid = require('node-uuid'),
     minutesDirName = './minutes',
+    Schema = mongoose.Schema,
     cache = {};
 
 exports.init = function(io) {
 
-    fs.mkdir(minutesDirName, function(err) {
-        try {
-           if(err){
-               throw err;
-           }
-        } catch (e) {
-            console.log(e.message);
-        }
+    /**
+    * mongodb Minutes Schema
+    */
+    var MinutesSchema = new Schema({
+        minutes_id: {type: String, required: true },
+        title:      {type: String, required: true },
+        where:      {type: String },
+        day:        {type: String },
+        startTime:  {type: String },
+        endTime:    {type: String },
+        entryList:  {type: Array, default: [] },
+        agendaList: {type: Array, default: [] },
+        secretary:  {type: String },
+        isSave:     {type: Boolean, default: true }
     });
+
+    /**
+    * mongodb Minutes Model
+    */
+    var Minutes = mongoose.model('Minutes', MinutesSchema);
+
+    /**
+    * mongodb connection
+    */
+    mongoose.connect('mongodb://' + process.env.APP_DOMAIN + '/sample_db');
+
+    /**
+    + mongodb test find all
+    */
+    Minutes.find({}, function(err, docs) {
+        console.log(docs);
+    });
+
 
     //
     //socket.io
@@ -50,14 +71,17 @@ exports.init = function(io) {
                 });
                 if(cache[data.minutes_id] === undefined) {
                     if(!data.minutes) {
-                        const file = './.minutes/' + data.minutes_id + '.json';
-                        fs.readFile(file, 'utf8', function(err, sou) {
+                        Minutes.find({
+                            minutes_id: data.minutes_id
+                        }, function(err, docs) {
                             if(err) {
                                 throw err;
                             } else {
-                                if (validator.isJSON(sou)) {
-                                    cache[data.minutes_id] = sou;
+                                const resolt = JSON.stringify(docs[0]);
+                                if (validator.isJSON(resolt)) {
+                                    cache[data.minutes_id] = resolt;
                                     socket.emit('update_serve', {minutes: cache[data.minutes_id]});
+                                    console.log('=> update_serve: emit');
                                 } else {
                                     throw new Error('data.minutes != JSON');
                                 }
@@ -72,12 +96,11 @@ exports.init = function(io) {
                     }
                 } else {
                     if (validator.isJSON(cache[data.minutes_id])) {
-                        cache[data.minutes_id] = data.minutes;
                         socket.emit('update_serve', {minutes: cache[data.minutes_id]});
+                        console.log('=> update_serve: emit');
                     } else {
                         throw new Error('data.minutes != JSON');
                     }
-                    console.log('=> update_serve: emit');
                 }
             } catch (e) {
                 console.log(e);
@@ -126,13 +149,12 @@ exports.init = function(io) {
     });
     router.post('/new', function(req, res) {
         try {
-            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
-            const data = JSON.stringify(req.body.minutes);
-            fs.writeFile(file, data, function(err, sou) {
+            const minutes = new Minutes(req.body.minutes);
+            minutes.save(function(err) {
                 if(err) {
-                    throw err;
+                   throw err;
                 } else {
-                    res.send(data);
+                    res.send(JSON.stringify(req.body.minutes));
                 }
             });
         } catch (e) {
@@ -146,13 +168,18 @@ exports.init = function(io) {
             if(!validator.isUUID(req.body.minutes.minutes_id)) {
                 throw new Error('not uuid v4');
             }
-            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
-            const data = JSON.stringify(req.body.minutes);
-            fs.writeFile(file, data, function(err, data) {
+            Minutes.update({
+                minutes_id: req.body.minutes.minutes_id
+            }, {
+                $set: req.body.minutes
+            },{
+                upsert: false, multi: true
+            }, function(err) {
                 if(err) {
                     throw err;
+                } else {
+                    res.send(req.body.minutes);
                 }
-                res.end();
             });
         } catch (e) {
             console.log(e);
@@ -165,12 +192,14 @@ exports.init = function(io) {
             if(!validator.isUUID(req.body.minutes.minutes_id)) {
                 throw new Error('not UUID v4');
             }
-            const file = './.minutes/' + req.body.minutes.minutes_id + '.json';
-            fs.unlink(file,function(err) {
+            Minutes.remove({
+                minutes_id: req.body.minutes.minutes_id
+            }, function(err) {
                 if(err) {
                     throw err;
+                } else {
+                    res.send(req.body.minutes);
                 }
-                res.end();
             });
         } catch (e) {
             console.log(e);

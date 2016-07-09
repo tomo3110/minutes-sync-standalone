@@ -46332,7 +46332,7 @@ var minutes = {
         minutes.data(new _minutes2.default(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.cache[minutesId])
+            minutes: minutes.cache[minutesId] ? JSON.stringify(minutes.cache[minutesId]) : false
         });
         _mithril2.default.endComputation();
 

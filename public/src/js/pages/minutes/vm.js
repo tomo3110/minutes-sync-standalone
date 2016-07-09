@@ -18,7 +18,7 @@ const minutes = {
         minutes.data(new Minutes(minutes.cache[minutesId] || {}));
         minutes.io.emit('init', {
             minutes_id: minutesId,
-            minutes: JSON.stringify(minutes.cache[minutesId])
+            minutes: (minutes.cache[minutesId]) ? JSON.stringify(minutes.cache[minutesId]) : false
         });
         m.endComputation();
 
