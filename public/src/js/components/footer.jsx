@@ -7,7 +7,7 @@ const Footer = {
     view(ctrl, view) {
         return <footer className='myfooter'>
             <hr/>
-            <p>♥ from the Yeoman team</p>
+            <p>This app is <b>MIT LICENSE</b></p>
         </footer>;
     }
 };

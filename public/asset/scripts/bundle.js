@@ -43841,7 +43841,10 @@ var Footer = {
                 tag: 'hr'
             }, {
                 tag: 'p',
-                children: ['♥ from the Yeoman team']
+                children: ['This app is ', {
+                    tag: 'b',
+                    children: ['MIT LICENSE']
+                }]
             }],
             attrs: { className: 'myfooter' }
         };
