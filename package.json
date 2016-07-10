@@ -1,5 +1,5 @@
 {
-  "name": "webapi2",
+  "name": "minutes-sync-standalone",
   "version": "0.0.1",
   "description": "",
   "main": "app.js",
@@ -37,7 +37,6 @@
     "knex": "^0.11.7",
     "mithril": "^0.2.5",
     "moment": "^2.13.0",
-    "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
     "ncmb": "^2.1.1",
     "node-uuid": "^1.4.7",
@@ -49,6 +48,7 @@
   },
   "devDependencies": {
     "babel-plugin-espower": "^2.2.0",
+    "babel-register": "^6.9.0",
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "browserify-shim": "^3.8.12",

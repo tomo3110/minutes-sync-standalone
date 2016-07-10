@@ -1,5 +1,4 @@
 import m from 'mithril';
-import uuid from 'uuid';
 
 import Jumbotron from '../../components/jumbotron.jsx';
 import MinutesAddInput from '../../components/minutes.add.input.jsx';
