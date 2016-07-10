@@ -4,15 +4,15 @@ var router = require('express').Router(),
     validator = require('validator'),
     fs = require('fs'),
     uuid = require('node-uuid'),
-    minutesDirName = './minutes',
+    minutesDirName = './.minutes',
     cache = {};
 
 exports.init = function(io) {
 
-    fs.mkdir(minutesDirName, (err) => {
+    fs.mkdir(minutesDirName, err => {
         if (err) {
             console.log(err);
-        };
+        }
     });
 
     //
@@ -30,9 +30,9 @@ exports.init = function(io) {
 
         socket.on('init', function(data) {
             try {
-                if (!validator.isUUID(data.minutes_id, 4)) {
-                    throw new Error('minutes_id != uuid ver4');
-                }
+                // if (!validator.isUUID(data.minutes_id, 4)) {
+                //     throw new Error('minutes_id != uuid ver4');
+                // }
                 console.log('<= initDataGet: on');
                 socket.join(data.minutes_id, function(err) {
                     if (err) {
@@ -41,7 +41,7 @@ exports.init = function(io) {
                 });
                 if(cache[data.minutes_id] === undefined) {
                     if(!data.minutes) {
-                        const file =  minutesDirName + data.minutes_id + '.json';
+                        const file =  minutesDirName + '/' + data.minutes_id + '.json';
                         fs.readFile(file, (err, resolt) => {
                             if(err) {
                                 throw err;
@@ -85,13 +85,7 @@ exports.init = function(io) {
             * 更新イベントにより取得したデータをキャッシュへ入れる
             */
             try {
-                if (!validator.isJSON(data.minutes)) {
-                    throw new Error('data.minutes != JSON');
-                }
                 if (!validator.isUUID(data.minutes_id, 4)) {
-                    throw new Error('data.minutes != UUID.v4');
-                }
-                if (!validator.isJSON(cache[data.minutes_id])) {
                     throw new Error('data.minutes != UUID.v4');
                 }
 
@@ -117,11 +111,10 @@ exports.init = function(io) {
     });
     router.post('/new', function(req, res) {
         try {
-            if(!validator.isUUID(req.body.minutes_id)) {
-                throw new Error('not uuid v4');
-            }
-            const file =  minutesDirName + req.body.minutes_id + '.json';
-            const data = JSON.stringify(req.body.minute);
+            const file =  minutesDirName + '/' + req.body.minutes_id + '.json';
+            const data = JSON.stringify(req.body.minutes);
+            console.log(file);
+            console.log(data);
             fs.writeFile(file, data, err => {
                 if(err) {
                    throw err;
@@ -140,8 +133,9 @@ exports.init = function(io) {
             if(!validator.isUUID(req.body.minutes.minutes_id)) {
                 throw new Error('not uuid v4');
             }
-            const file =  minutesDirName + req.body.minutes.minutes_id + '.json';
-            const data = JSON.stringify(req.body.minute);
+            const file =  minutesDirName + '/' + req.body.minutes.minutes_id + '.json';
+            const data = JSON.stringify(req.body.minutes);
+            console.log(data);
             fs.writeFile(file, data, err => {
                 if(err) {
                    throw err;
@@ -160,7 +154,7 @@ exports.init = function(io) {
             if(!validator.isUUID(req.body.minutes.minutes_id)) {
                 throw new Error('not UUID v4');
             }
-            const file =  minutesDirName + req.body.minutes.minutes_id + '.json';
+            const file =  minutesDirName + '/' + req.body.minutes.minutes_id + '.json';
             fs.unlink(file, (err) => {
                 if (err) {
                     throw err;
