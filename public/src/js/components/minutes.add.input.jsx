@@ -1,5 +1,5 @@
 import m from 'mithril';
-import uuid from 'uuid';
+import uuid from 'node-uuid';
 import vm from '../vm';
 
 const MinutesAddInput = {
