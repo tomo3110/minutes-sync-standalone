@@ -44231,7 +44231,7 @@ var IndentEditModal = {
                 content: '',
                 indent: args.indentItem.indent() + 1
             });
-            _vm2.default.dataSync(ctrl.minutesId);
+            // vm.dataSync(ctrl.minutesId);
         };
         this.remove = function () {
             args.removeChildren();

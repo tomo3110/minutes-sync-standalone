@@ -149,7 +149,7 @@ const IndentEditModal = {
                 content: '',
                 indent: args.indentItem.indent() + 1
             });
-            vm.dataSync(ctrl.minutesId);
+            // vm.dataSync(ctrl.minutesId);
         };
         this.remove = function() {
             args.removeChildren();
